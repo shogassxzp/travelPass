@@ -15,9 +15,22 @@
 		1F1C7FF72EB67A2A0026CCDD /* travelPass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = travelPass.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1FAAEDF72EC97AEC00EB0B6B /* Exceptions for "travelPass" folder in "travelPass" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 1F1C7FF62EB67A2A0026CCDD /* travelPass */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		1F1C7FF92EB67A2A0026CCDD /* travelPass */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1FAAEDF72EC97AEC00EB0B6B /* Exceptions for "travelPass" folder in "travelPass" target */,
+			);
 			path = travelPass;
 			sourceTree = "<group>";
 		};
@@ -278,6 +291,7 @@
 				DEVELOPMENT_TEAM = Z8827K2MDU;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = travelPass/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -314,6 +328,7 @@
 				DEVELOPMENT_TEAM = Z8827K2MDU;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = travelPass/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

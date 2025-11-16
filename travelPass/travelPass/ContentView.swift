@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  travelPass
-//
-//  Created by Игнат Рогачевич on 1.11.25.
-//
-
 import OpenAPIURLSession
 import SwiftUI
 
@@ -18,44 +11,54 @@ struct ContentView: View {
         }
         .padding()
         .onAppear {
-            testFetchStation()
+            //testFetchStation()
+            testCopyright()
         }
     }
 
-    // Функция для тестового вызова API
     func testFetchStation() {
-        // Создаём Task для выполнения асинхронного кода
         Task {
             do {
-                // 1. Создаём экземпляр сгенерированного клиента
                 let client = Client(
-                    // Используем URL сервера, также сгенерированный из openapi.yaml (если он там определён)
                     serverURL: try Servers.Server1.url(),
-                    // Указываем, какой транспорт использовать для отправки запросов
                     transport: URLSessionTransport()
                 )
 
-                // 2. Создаём экземпляр нашего сервиса, передавая ему клиент и API-ключ
                 let service = NearestStationsService(
                     client: client,
-                    apikey: "4b5866df-0bfd-4e43-8816-3455a97dbbfd" // !!! ЗАМЕНИТЕ НА СВОЙ РЕАЛЬНЫЙ КЛЮЧ !!!
+                    apikey: "4b5866df-0bfd-4e43-8816-3455a97dbbfd"
                 )
 
-                // 3. Вызываем метод сервиса
                 print("Fetching stations...")
                 let stations = try await service.getNearestStations(
-                    lat: 59.864177, // Пример координат
-                    lng: 30.319163, // Пример координат
-                    distance: 50 // Пример дистанции
+                    lat: 59.864177,
+                    lng: 30.319163,
+                    distance: 50
                 )
 
-                // 4. Если всё успешно, печатаем результат в консоль
                 print("Successfully fetched stations: \(stations)")
             } catch {
-                // 5. Если произошла ошибка на любом из этапов (создание клиента, вызов сервиса, обработка ответа),
-                //    она будет поймана здесь, и мы выведем её в консоль
                 print("Error fetching stations: \(error)")
-                // В реальном приложении здесь должна быть логика обработки ошибок (показ алерта и т. д.)
+            }
+        }
+    }
+    
+    func testCopyright() {
+        Task{
+            do {
+                let client = Client(
+                    serverURL: try Servers.Server1.url(),
+                    transport: URLSessionTransport()
+                )
+                let service = CopyrightService(
+                    client: client,
+                    apikey: "4b5866df-0bfd-4e43-8816-3455a97dbbfd"
+                )
+                print("Fetching copyright")
+                let copyright = try await service.getCopyright()
+                print("Succes fetched copyright: \(copyright)")
+            } catch {
+                print("Error fetching copyright: \(error)")
             }
         }
     }
