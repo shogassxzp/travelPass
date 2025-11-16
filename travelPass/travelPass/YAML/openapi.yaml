@@ -1,0 +1,122 @@
+openapi: 3.0.3
+info:
+  title: Yandex Rasp API
+  description: API Яндекс.Расписаний
+  version: 3.0.0
+servers:
+  - url: https://api.rasp.yandex.net/v3.0
+paths:
+  /copyright:
+    get:
+      summary: Get copyright information
+      operationId: getCopyright
+      parameters:
+        - name: apikey
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Copyright information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  copyright:
+                    $ref: '#/components/schemas/Copyright'
+  /stations_list:
+    get:
+      summary: List of stations
+      operationId: getStationList
+      parameters:
+        - name: apikey
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Station list
+          content:
+           text/html:
+             schema:
+               type: object
+               properties:
+                 countries:
+                   type: array
+                   items:
+                     $ref: '#/components/schemas/Country'
+
+components:
+  schemas:
+    Copyright:
+      type: object
+      properties:
+        url:
+        
+          type: string
+        text:
+          type: string
+    Country:
+      type: object
+      properties:
+        title:
+          type: string
+        codes:
+          $ref: '#/components/schemas/Codes'
+        regions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Region'
+
+    Region:
+      type: object
+      properties:
+        title:
+          type: string
+        codes:
+          $ref: '#/components/schemas/Codes'
+        settlements:
+          type: array
+          items:
+            $ref: '#/components/schemas/Settlement'
+
+    Settlement:
+      type: object
+      properties:
+        title:
+          type: string
+        codes:
+          $ref: '#/components/schemas/Codes'
+        stations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Station'
+
+    Station:
+      type: object
+      properties:
+        title:
+          type: string
+        station_type:
+          type: string
+        transport_type:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        direction:
+          type: string
+        codes:
+          $ref: '#/components/schemas/Codes'
+
+    Codes:
+      type: object
+      properties:
+        yandex_code:
+          type: string
+        esr_code:
+          type: string

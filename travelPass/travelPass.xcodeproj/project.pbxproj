@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		1FAAEDB42EC93E6300EB0B6B /* OpenAPIRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = 1FAAEDB32EC93E6300EB0B6B /* OpenAPIRuntime */; };
+		1FAAEDB72EC93EB600EB0B6B /* OpenAPIURLSession in Frameworks */ = {isa = PBXBuildFile; productRef = 1FAAEDB62EC93EB600EB0B6B /* OpenAPIURLSession */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		1F1C7FF72EB67A2A0026CCDD /* travelPass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = travelPass.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +28,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FAAEDB42EC93E6300EB0B6B /* OpenAPIRuntime in Frameworks */,
+				1FAAEDB72EC93EB600EB0B6B /* OpenAPIURLSession in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,12 +66,15 @@
 			buildRules = (
 			);
 			dependencies = (
+				1FAAEDB92EC93FA700EB0B6B /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				1F1C7FF92EB67A2A0026CCDD /* travelPass */,
 			);
 			name = travelPass;
 			packageProductDependencies = (
+				1FAAEDB32EC93E6300EB0B6B /* OpenAPIRuntime */,
+				1FAAEDB62EC93EB600EB0B6B /* OpenAPIURLSession */,
 			);
 			productName = travelPass;
 			productReference = 1F1C7FF72EB67A2A0026CCDD /* travelPass.app */;
@@ -94,6 +104,11 @@
 			);
 			mainGroup = 1F1C7FEE2EB67A2A0026CCDD;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				1FAAEDAF2EC93DAA00EB0B6B /* XCRemoteSwiftPackageReference "swift-openapi-generator" */,
+				1FAAEDB22EC93E6300EB0B6B /* XCRemoteSwiftPackageReference "swift-openapi-runtime" */,
+				1FAAEDB52EC93EB600EB0B6B /* XCRemoteSwiftPackageReference "swift-openapi-urlsession" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1F1C7FF82EB67A2A0026CCDD /* Products */;
 			projectDirPath = "";
@@ -123,6 +138,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1FAAEDB92EC93FA700EB0B6B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 1FAAEDB82EC93FA700EB0B6B /* OpenAPIGenerator */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		1F1C80002EB67A2B0026CCDD /* Debug */ = {
@@ -259,8 +281,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -269,12 +291,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = rogachevich.ignat.travelPass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -291,8 +317,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -301,12 +327,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = rogachevich.ignat.travelPass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -332,6 +362,51 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1FAAEDAF2EC93DAA00EB0B6B /* XCRemoteSwiftPackageReference "swift-openapi-generator" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-openapi-generator";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.10.3;
+			};
+		};
+		1FAAEDB22EC93E6300EB0B6B /* XCRemoteSwiftPackageReference "swift-openapi-runtime" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-openapi-runtime";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.8.3;
+			};
+		};
+		1FAAEDB52EC93EB600EB0B6B /* XCRemoteSwiftPackageReference "swift-openapi-urlsession" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-openapi-urlsession";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1FAAEDB32EC93E6300EB0B6B /* OpenAPIRuntime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1FAAEDB22EC93E6300EB0B6B /* XCRemoteSwiftPackageReference "swift-openapi-runtime" */;
+			productName = OpenAPIRuntime;
+		};
+		1FAAEDB62EC93EB600EB0B6B /* OpenAPIURLSession */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1FAAEDB52EC93EB600EB0B6B /* XCRemoteSwiftPackageReference "swift-openapi-urlsession" */;
+			productName = OpenAPIURLSession;
+		};
+		1FAAEDB82EC93FA700EB0B6B /* OpenAPIGenerator */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1FAAEDAF2EC93DAA00EB0B6B /* XCRemoteSwiftPackageReference "swift-openapi-generator" */;
+			productName = "plugin:OpenAPIGenerator";
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1F1C7FEF2EB67A2A0026CCDD /* Project object */;
 }
