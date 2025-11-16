@@ -17,7 +17,8 @@ struct ContentView: View {
 //            testStationScheduleService()
 //            testRouteStationService()
 //            testNearestCityService()
-            testStationsListService()
+//            testStationsListService()
+            testCarrierInfoService()
         }
     }
 
@@ -173,6 +174,26 @@ struct ContentView: View {
                 print("Countries count: \(stations.countries?.count ?? 0)")
             } catch {
                 print("Error fetching all stations: \(error)")
+            }
+        }
+    }
+    func testCarrierInfoService() {
+        Task {
+            do {
+                let client = Client(
+                    serverURL: try Servers.Server1.url(),
+                    transport: URLSessionTransport()
+                )
+                let service = CarrierInfoService(
+                    client: client,
+                    apikey: "4b5866df-0bfd-4e43-8816-3455a97dbbfd"
+                )
+                print("Fetching carrier info")
+                let stations = try await service.getCarrierInfo(code: "111")
+                print("Successfully fetched carrier info: \(stations)")
+                
+            } catch {
+                print("Error fetching carrier info: \(error)")
             }
         }
     }
