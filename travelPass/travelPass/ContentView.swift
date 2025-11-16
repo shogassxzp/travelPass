@@ -11,12 +11,13 @@ struct ContentView: View {
         }
         .padding()
         .onAppear {
-            //testFetchStation()
-            testCopyright()
+            //testNearestStations()
+            //testCopyright()
+            testSchedualBetweenStation()
         }
     }
 
-    func testFetchStation() {
+    func testNearestStations() {
         Task {
             do {
                 let client = Client(
@@ -59,6 +60,28 @@ struct ContentView: View {
                 print("Succes fetched copyright: \(copyright)")
             } catch {
                 print("Error fetching copyright: \(error)")
+            }
+        }
+    }
+    func testSchedualBetweenStation() {
+        Task{
+            do {
+                let client = Client(
+                    serverURL: try Servers.Server1.url(),
+                    transport: URLSessionTransport()
+                )
+                let service = SchedualBetweenStationsService(
+                    client: client,
+                    apikey: "4b5866df-0bfd-4e43-8816-3455a97dbbfd"
+                )
+                print("Fetching schedule")
+                let schedule = try await service.getSchedualBetweenStations(
+                    from: "s9600213",
+                    to: "s9600366"
+                )
+                print("Succes fetched schedule: \(schedule)")
+            } catch {
+                print("Error fetching schedule: \(error)")
             }
         }
     }
