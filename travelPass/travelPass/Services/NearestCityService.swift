@@ -19,7 +19,7 @@ final class NearestCityService: NearestCityServiceProtocol {
     }
 
     func getNearestCity(lat: Double, lng: Double) async throws -> NearestCity {
-        let response = try await client.getNearestCity(query: .init(
+        let response = try await client.getNearestSettlement(query: .init(
             apikey: apikey,
             lat: lat,
             lng: lng
