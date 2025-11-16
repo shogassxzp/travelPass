@@ -13,7 +13,9 @@ struct ContentView: View {
         .onAppear {
             //testNearestStations()
             //testCopyright()
-            testSchedualBetweenStation()
+//            testSchedualBetweenStation()
+//            testStationScheduleService()
+            testRouteStationService()
         }
     }
 
@@ -82,6 +84,46 @@ struct ContentView: View {
                 print("Succes fetched schedule: \(schedule)")
             } catch {
                 print("Error fetching schedule: \(error)")
+            }
+        }
+    }
+    func testStationScheduleService() {
+        Task{
+            do {
+                let client = Client(
+                    serverURL: try Servers.Server1.url(),
+                    transport: URLSessionTransport()
+                )
+                let service = StationScheduleService(
+                    client: client,
+                    apikey: "4b5866df-0bfd-4e43-8816-3455a97dbbfd"
+                )
+                print("Fetching station schedule")
+                let schedule = try await service.getStationSchedule(
+                    station: "s9600366"
+                )
+                print("Succes fetched station schedule: \(schedule)")
+            } catch {
+                print("Error fetching station schedule: \(error)")
+            }
+        }
+    }
+    func testRouteStationService() {
+        Task{
+            do {
+                let client = Client(
+                    serverURL: try Servers.Server1.url(),
+                    transport: URLSessionTransport()
+                )
+                let service = RouteStationsService(
+                    client: client,
+                    apikey: "4b5866df-0bfd-4e43-8816-3455a97dbbfd"
+                )
+                print("Fetching station route")
+                let route = try await service.getRouteStations(uid: "FV-6951_260330_c8565_12")
+                print("Succes fetched station route: \(route)")
+            } catch {
+                print("Error fetching station route: \(error)")
             }
         }
     }

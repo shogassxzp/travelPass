@@ -626,11 +626,11 @@ components:
           description: Дни, когда рейс не выполняется
         arrival:
           type: string
-          format: date-time
+          #format: date-time
           description: Время прибытия в формате ISO 8601
         departure:
           type: string
-          format: date-time
+          #format: date-time
           description: Время отправления в формате ISO 8601
         thread:
           $ref: '#/components/schemas/Thread'
@@ -719,10 +719,10 @@ components:
       properties:
         arrival:
           type: string
-          format: date-time
+          #format: date-time
         departure:
           type: string
-          format: date-time
+          #format: date-time
         stop_time:
           type: integer
           description: Продолжительность остановки в секундах
@@ -766,11 +766,11 @@ components:
               description: Частота рейсов
             begin_time:
               type: string
-              format: date-time
+              #format: date-time
               description: Время начала
             end_time:
               type: string
-              format: date-time
+              #format: date-time
               description: Время окончания
     Directions:
       type: object
