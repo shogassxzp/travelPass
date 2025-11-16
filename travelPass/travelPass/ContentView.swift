@@ -11,11 +11,12 @@ struct ContentView: View {
         }
         .padding()
         .onAppear {
-            //testNearestStations()
-            //testCopyright()
+//            testNearestStations()
+//            testCopyright()
 //            testSchedualBetweenStation()
 //            testStationScheduleService()
-            testRouteStationService()
+//            testRouteStationService()
+            testNearestCityService()
         }
     }
 
@@ -45,9 +46,9 @@ struct ContentView: View {
             }
         }
     }
-    
+
     func testCopyright() {
-        Task{
+        Task {
             do {
                 let client = Client(
                     serverURL: try Servers.Server1.url(),
@@ -65,8 +66,9 @@ struct ContentView: View {
             }
         }
     }
+
     func testSchedualBetweenStation() {
-        Task{
+        Task {
             do {
                 let client = Client(
                     serverURL: try Servers.Server1.url(),
@@ -87,8 +89,9 @@ struct ContentView: View {
             }
         }
     }
+
     func testStationScheduleService() {
-        Task{
+        Task {
             do {
                 let client = Client(
                     serverURL: try Servers.Server1.url(),
@@ -108,8 +111,9 @@ struct ContentView: View {
             }
         }
     }
+
     func testRouteStationService() {
-        Task{
+        Task {
             do {
                 let client = Client(
                     serverURL: try Servers.Server1.url(),
@@ -124,6 +128,29 @@ struct ContentView: View {
                 print("Succes fetched station route: \(route)")
             } catch {
                 print("Error fetching station route: \(error)")
+            }
+        }
+    }
+
+    func testNearestCityService() {
+        Task {
+            do {
+                let client = Client(
+                    serverURL: try Servers.Server1.url(),
+                    transport: URLSessionTransport()
+                )
+                let service = NearestCityService(
+                    client: client,
+                    apikey: "4b5866df-0bfd-4e43-8816-3455a97dbbfd"
+                )
+                print("Fetching nearest city")
+                let city = try await service.getNearestCity(
+                    lat: 59.864177,
+                    lng: 30.319163
+                )
+                print("Succes fetched nearest city: \(city)")
+            } catch {
+                print("Error fetching nearest city: \(error)")
             }
         }
     }

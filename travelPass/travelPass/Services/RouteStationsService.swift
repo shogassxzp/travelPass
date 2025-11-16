@@ -23,8 +23,7 @@ final class RouteStationsService: RouteStationsServiceProtocol {
             apikey: apikey,
             uid: uid
         ))
-        
+
         return try response.ok.body.json
-        
     }
 }

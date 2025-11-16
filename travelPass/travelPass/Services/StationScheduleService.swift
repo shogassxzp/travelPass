@@ -23,8 +23,7 @@ final class StationScheduleService: StationScheduleServiceProtocol {
             apikey: apikey,
             station: station
         ))
-        
+
         return try response.ok.body.json
-        
     }
 }

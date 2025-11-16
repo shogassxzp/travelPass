@@ -1,6 +1,6 @@
 import Foundation
-import OpenAPIURLSession
 import OpenAPIRuntime
+import OpenAPIURLSession
 
 typealias SchedualBetweenStations = Components.Schemas.Segments
 
@@ -11,12 +11,12 @@ protocol SchedualBetweenStationsServiceProtocol {
 final class SchedualBetweenStationsService: SchedualBetweenStationsServiceProtocol {
     private let client: Client
     private let apikey: String
-    
+
     init(client: Client, apikey: String) {
         self.client = client
         self.apikey = apikey
     }
-    
+
     func getSchedualBetweenStations(from: String, to: String) async throws -> SchedualBetweenStations {
         let response = try await client.getSchedualBetweenStations(
             query: .init(
