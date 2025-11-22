@@ -7,12 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F3187262ECBCDBF0044EE36 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 1F3187252ECBCDBF0044EE36 /* Localizable.xcstrings */; };
 		1FAAEDB42EC93E6300EB0B6B /* OpenAPIRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = 1FAAEDB32EC93E6300EB0B6B /* OpenAPIRuntime */; };
 		1FAAEDB72EC93EB600EB0B6B /* OpenAPIURLSession in Frameworks */ = {isa = PBXBuildFile; productRef = 1FAAEDB62EC93EB600EB0B6B /* OpenAPIURLSession */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1F1C7FF72EB67A2A0026CCDD /* travelPass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = travelPass.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F3187252ECBCDBF0044EE36 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -52,6 +54,7 @@
 		1F1C7FEE2EB67A2A0026CCDD = {
 			isa = PBXGroup;
 			children = (
+				1F3187252ECBCDBF0044EE36 /* Localizable.xcstrings */,
 				1F1C7FF92EB67A2A0026CCDD /* travelPass */,
 				1F1C7FF82EB67A2A0026CCDD /* Products */,
 			);
@@ -114,6 +117,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = 1F1C7FEE2EB67A2A0026CCDD;
 			minimizedProjectReferenceProxies = 1;
@@ -137,6 +141,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F3187262ECBCDBF0044EE36 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,6 +225,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -277,6 +283,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -297,6 +304,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -334,6 +342,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
