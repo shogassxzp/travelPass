@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "About project" : {
+
+    },
     "From" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -33,6 +36,9 @@
           }
         }
       }
+    },
+    "Settings" : {
+
     },
     "To" : {
       "extractionState" : "manual",
