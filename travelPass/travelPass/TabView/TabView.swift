@@ -13,18 +13,21 @@ struct MainTabView: View {
             MainScreen()
                 .tabItem {
                     Image("Arrow")
-                        .foregroundStyle(.yGray)
-                        .tint(.yGray)
-                        .accentColor(.yBlack)
-                        
                 }
-            SettingsView()
+            SettingsScreen()
                 .tabItem {
                     Image("Settings gear")
-                        .tint(.yGray)
-                        .accentColor(.yBlack)
                 }
         }
+
+        .tint(.yBlack)
+        .overlay(
+            Rectangle()
+                .frame(height: 1)
+                .foregroundStyle(.yGray)
+                .offset(y: -50),
+            alignment: .bottom
+        )
     }
 }
 
