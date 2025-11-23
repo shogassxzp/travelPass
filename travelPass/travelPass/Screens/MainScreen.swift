@@ -1,43 +1,49 @@
-//
-//  MainScreen.swift
-//  travelPass
-//
-//  Created by Игнат Рогачевич on 22.11.25.
-//
-
 import SwiftUI
 
 struct MainScreen: View {
-    @State var from = "from"
-    @State var to = "to"
+    @State var from = "From"
+    @State var to = "To"
     @State var showingCityPicker = false
-    @State var selectedField: FieldType
+    @State var selectedField: FieldType? = nil
 
     enum FieldType {
         case from, to
     }
 
     var body: some View {
-        NavigationStack {
+        VStack {
             HStack {
                 VStack {
-                    Text("From")
-                        .foregroundStyle(.yGray)
-                        .padding(20)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Button(action: {
+                        selectedField = .from
+                        showingCityPicker = true
+                    }) {
+                        Text(from)
+                            .lineLimit(1)
+                            .foregroundStyle(from == "From" ? .yGray : .yBlack)
+                            .font(.system(size: 17,weight: .regular))
+                            .padding(20)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
 
-                    Text("To")
-                        .foregroundStyle(.yGray)
-                        .padding(20)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Button(action: {
+                        selectedField = .to
+                        showingCityPicker = true
+                    }) {
+                        Text(to)
+                            .lineLimit(1)
+                            .foregroundStyle(to == "To" ? .yGray : .yBlack)
+                            .font(.system(size: 17,weight: .regular))
+                            .padding(20)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
                 }
                 .background(.white)
                 .cornerRadius(20)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(16)
-                
 
-                Button(action: {}) {
+                Button(action: {revert()}) {
                     Image(systemName: "arrow.2.squarepath")
                         .frame(width: 36, height: 36)
                         .background(.yUniversalWhite)
@@ -49,7 +55,22 @@ struct MainScreen: View {
             .cornerRadius(20)
             .padding(32)
             .frame(maxWidth: .infinity)
+
+            Spacer()
         }
+        .fullScreenCover(isPresented: $showingCityPicker) {
+            CityPickerScreen(
+                selectedField: selectedField ?? .from,
+                from: $from,
+                to: $to
+            )
+        }
+    }
+    private func revert() {
+        guard from != "From", to != "To" else { return }
+        let temp = from
+        from = to
+        to = temp
     }
 }
 

@@ -38,7 +38,14 @@
       }
     },
     "Settings" : {
-
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Настройки"
+          }
+        }
+      }
     },
     "To" : {
       "extractionState" : "manual",
@@ -50,6 +57,18 @@
           }
         }
       }
+    },
+    "Введите запрос" : {
+
+    },
+    "Выбор города" : {
+
+    },
+    "Выбор станции" : {
+
+    },
+    "Город не найден" : {
+
     }
   },
   "version" : "1.1"

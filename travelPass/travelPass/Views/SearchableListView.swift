@@ -1,10 +1,3 @@
-//
-//  SearchableListView.swift
-//  travelPass
-//
-//  Created by Игнат Рогачевич on 22.11.25.
-//
-
 import SwiftUI
 
 struct SearchableListView: View {
@@ -13,7 +6,7 @@ struct SearchableListView: View {
     let emptyMessage: String
     @Binding var searchString: String
     let items: [String]
-    let onItemSelect: (String) -> Void
+    let onItemSelected: (String) -> Void
 
     var filteredItems: [String] {
         if searchString.isEmpty {
@@ -24,7 +17,7 @@ struct SearchableListView: View {
     }
 
     var body: some View {
-        VStack {
+        LazyVStack {
             TextField("Введите запрос", text: $searchString)
                 .textFieldStyle(.plain)
                 .font(.system(size: 17, weight: .regular))
@@ -57,7 +50,7 @@ struct SearchableListView: View {
                 VStack {
                     Spacer()
 
-                    Text("Город не найден")
+                    Text(emptyMessage)
                         .foregroundStyle(.yBlack)
                         .font(.system(size: 24, weight: .bold))
                         .frame(maxWidth: .infinity, alignment: .center)
@@ -68,22 +61,25 @@ struct SearchableListView: View {
                 .frame(height: UIScreen.main.bounds.height * 0.8)
             } else {
                 LazyVStack(spacing: 0) {
-                    ForEach(items, id: \.self) { city in
-                        HStack {
-                            Text(city)
-                                .foregroundStyle(.primary)
-                                .font(.system(size: 16, weight: .regular))
-                                .padding(.leading, 24) // Базовые 16 + 8 оверлей
+                    ForEach(filteredItems, id: \.self) { item in
+                        Button(action: {
+                            onItemSelected(item)
+                        }) {
+                            HStack {
+                                Text(item)
+                                    .foregroundStyle(.primary)
+                                    .font(.system(size: 16, weight: .regular))
+                                    .padding(.leading, 24)
 
-                            Spacer()
+                                Spacer()
 
-                            Image(systemName: "chevron.right")
-                                .foregroundStyle(.yBlack)
-                                .font(.system(size: 14))
-                                .padding(.trailing, 24) // Базовые 16 + 8 оверлей
+                                Image(systemName: "chevron.right")
+                                    .foregroundStyle(.yBlack)
+                                    .font(.system(size: 14))
+                                    .padding(.trailing, 24)
+                            }
+                            .padding(.vertical, 12)
                         }
-
-                        .padding(.vertical, 12)
                     }
                 }
             }
