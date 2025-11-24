@@ -15,6 +15,7 @@ struct MainTabView: View {
             .tabItem {
                 Image("Settings gear")
             }
+            
         }
         .tint(.yBlack)
         .overlay(
