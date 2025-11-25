@@ -21,7 +21,7 @@ struct MainScreen: View {
                         Text(from)
                             .lineLimit(1)
                             .foregroundStyle(from == "From" ? .yGray : .yBlack)
-                            .font(.system(size: 17,weight: .regular))
+                            .font(.system(size: 17, weight: .regular))
                             .padding(20)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
@@ -33,7 +33,7 @@ struct MainScreen: View {
                         Text(to)
                             .lineLimit(1)
                             .foregroundStyle(to == "To" ? .yGray : .yBlack)
-                            .font(.system(size: 17,weight: .regular))
+                            .font(.system(size: 17, weight: .regular))
                             .padding(20)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
@@ -43,7 +43,7 @@ struct MainScreen: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(16)
 
-                Button(action: {revert()}) {
+                Button(action: { revert() }) {
                     Image(systemName: "arrow.2.squarepath")
                         .frame(width: 36, height: 36)
                         .background(.yUniversalWhite)
@@ -56,8 +56,23 @@ struct MainScreen: View {
             .padding(32)
             .frame(maxWidth: .infinity)
 
+            if from != "From" && to != "To" {
+                Button(action: { print("") }) {
+                    Text("Find")
+                        .foregroundStyle(.yWhite)
+                        .font(.system(size: 17, weight: .bold))
+                        .padding(.vertical, 20)
+                        .padding(.horizontal, 32)
+                }
+                .frame(maxWidth: 150, maxHeight: 60)
+                .background(.yBlue)
+                .cornerRadius(16)
+
+                
+            }
             Spacer()
         }
+
         .fullScreenCover(isPresented: $showingCityPicker) {
             CityPickerScreen(
                 selectedField: selectedField ?? .from,
@@ -66,6 +81,7 @@ struct MainScreen: View {
             )
         }
     }
+
     private func revert() {
         guard from != "From", to != "To" else { return }
         let temp = from
