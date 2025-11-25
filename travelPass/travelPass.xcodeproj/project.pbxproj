@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1F3187262ECBCDBF0044EE36 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 1F3187252ECBCDBF0044EE36 /* Localizable.xcstrings */; };
+		1F4CC51E2ED5A84E00315D33 /* CarrierListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4CC51D2ED5A84E00315D33 /* CarrierListScreen.swift */; };
 		1FAAEDB42EC93E6300EB0B6B /* OpenAPIRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = 1FAAEDB32EC93E6300EB0B6B /* OpenAPIRuntime */; };
 		1FAAEDB72EC93EB600EB0B6B /* OpenAPIURLSession in Frameworks */ = {isa = PBXBuildFile; productRef = 1FAAEDB62EC93EB600EB0B6B /* OpenAPIURLSession */; };
 /* End PBXBuildFile section */
@@ -15,6 +16,7 @@
 /* Begin PBXFileReference section */
 		1F1C7FF72EB67A2A0026CCDD /* travelPass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = travelPass.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F3187252ECBCDBF0044EE36 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		1F4CC51D2ED5A84E00315D33 /* CarrierListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarrierListScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -54,6 +56,7 @@
 		1F1C7FEE2EB67A2A0026CCDD = {
 			isa = PBXGroup;
 			children = (
+				1F4CC51D2ED5A84E00315D33 /* CarrierListScreen.swift */,
 				1F3187252ECBCDBF0044EE36 /* Localizable.xcstrings */,
 				1F1C7FF92EB67A2A0026CCDD /* travelPass */,
 				1F1C7FF82EB67A2A0026CCDD /* Products */,
@@ -152,6 +155,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F4CC51E2ED5A84E00315D33 /* CarrierListScreen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
