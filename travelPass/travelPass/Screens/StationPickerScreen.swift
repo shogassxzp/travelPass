@@ -6,10 +6,10 @@ struct StationPickerScreen: View {
     @Binding var from: String
     @Binding var to: String
     let onDismiss: () -> Void
-    
+
     @State private var searchText = ""
     @State private var stations = ["Курский вокзал", "Балтийский вокзал", "Ладожский вокзал"]
-    
+
     var body: some View {
         SearchableListView(
             title: "Выбор станции",
@@ -27,7 +27,6 @@ struct StationPickerScreen: View {
                 }
                 onDismiss()
             }
-            .navigationTitle("Выбор станции")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
     }
 }

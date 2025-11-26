@@ -4,6 +4,7 @@ struct MainScreen: View {
     @State var from = "From"
     @State var to = "To"
     @State var showingCityPicker = false
+    @State var showingCarrierList = false
     @State var selectedField: FieldType? = nil
 
     enum FieldType {
@@ -57,7 +58,7 @@ struct MainScreen: View {
             .frame(maxWidth: .infinity)
 
             if from != "From" && to != "To" {
-                Button(action: { print("") }) {
+                NavigationLink(destination: CarriersListScreen(from: from, to: to)) {
                     Text("Find")
                         .foregroundStyle(.yWhite)
                         .font(.system(size: 17, weight: .bold))
@@ -67,8 +68,6 @@ struct MainScreen: View {
                 .frame(maxWidth: 150, maxHeight: 60)
                 .background(.yBlue)
                 .cornerRadius(16)
-
-                
             }
             Spacer()
         }

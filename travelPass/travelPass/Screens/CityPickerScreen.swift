@@ -13,22 +13,6 @@ struct CityPickerScreen: View {
     var body: some View {
         NavigationStack {
             VStack {
-                HStack {
-                    Button(action: { dismiss() }) {
-                        Image(systemName: "chevron.left")
-                            .foregroundStyle(.yBlack)
-                    }
-
-                    Text("Выбор города")
-                        .font(.system(size: 17, weight: .bold))
-                        .frame(maxWidth: .infinity)
-                        .padding(.leading, -10)
-                        .padding(.vertical)
-
-                    Spacer()
-                }
-                .padding(.horizontal)
-
                 SearchableListView(
                     title: "Выбор города",
                     placeholder: "Введите запрос",
@@ -39,7 +23,7 @@ struct CityPickerScreen: View {
                     selectedCity = city
                 }
             }
-            .navigationBarBackButtonHidden(true)
+
             .navigationDestination(isPresented: Binding(
                 get: { selectedCity != nil },
                 set: { if !$0 { selectedCity = nil } }
