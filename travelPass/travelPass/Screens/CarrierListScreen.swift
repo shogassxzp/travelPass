@@ -7,6 +7,8 @@ struct CarriersListScreen: View {
 
     @Environment(\.dismiss) private var dismiss
 
+    @State var showingFilters = false
+
     var body: some View {
         HStack {
             Button(action: { dismiss() }) {
@@ -36,9 +38,9 @@ struct CarriersListScreen: View {
                 .padding(.horizontal, 16)
                 .padding(.vertical, 20)
             }
-            Button(action: {}) {
+            Button(action: { showingFilters = true }) {
                 Text("Уточнить время")
-                    .font(.system(size: 17, weight: .regular))
+                    .font(.system(size: 17, weight: .bold))
                     .foregroundStyle(.yUniversalWhite)
                     .padding(.horizontal, 16)
                     .frame(maxWidth: .infinity, maxHeight: 60)
@@ -47,6 +49,9 @@ struct CarriersListScreen: View {
             .cornerRadius(16)
             .padding(.horizontal, 10)
             .padding(.bottom, 16)
+        }
+        .fullScreenCover(isPresented: $showingFilters) {
+            FiltersScreen()
         }
         .navigationBarBackButtonHidden(true)
     }
