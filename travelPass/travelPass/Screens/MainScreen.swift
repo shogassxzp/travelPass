@@ -21,7 +21,7 @@ struct MainScreen: View {
                     }) {
                         Text(from)
                             .lineLimit(1)
-                            .foregroundStyle(from == "From" ? .yGray : .yBlack)
+                            .foregroundStyle(from == "From" ? .yGray : .yUniversalBlack)
                             .font(.system(size: 17, weight: .regular))
                             .padding(20)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -33,7 +33,7 @@ struct MainScreen: View {
                     }) {
                         Text(to)
                             .lineLimit(1)
-                            .foregroundStyle(to == "To" ? .yGray : .yBlack)
+                            .foregroundStyle(to == "To" ? .yGray : .yUniversalBlack)
                             .font(.system(size: 17, weight: .regular))
                             .padding(20)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -47,6 +47,7 @@ struct MainScreen: View {
                 Button(action: { revert() }) {
                     Image(systemName: "arrow.2.squarepath")
                         .frame(width: 36, height: 36)
+                        .foregroundStyle(.yBlue)
                         .background(.yUniversalWhite)
                         .cornerRadius(40)
                         .padding(.trailing, 16)
@@ -84,7 +85,9 @@ struct MainScreen: View {
         .fullScreenCover(isPresented: $showingCarrierList) {
             CarriersListScreen(from: from, to: to)
         }
+        .backgroundStyle(.yWhite)
     }
+        
 
     private func revert() {
         guard from != "From", to != "To" else { return }
