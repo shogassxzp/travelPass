@@ -3,19 +3,17 @@ import SwiftUI
 struct MainTabView: View {
     var body: some View {
         TabView {
-            NavigationStack {
-                MainScreen()
-            }
-            .tabItem {
-                Image("Arrow")
-            }
-            NavigationStack {
-                SettingsScreen()
-            }
-            .tabItem {
-                Image("Settings gear")
-            }
-            
+            MainScreen()
+
+                .tabItem {
+                    Image("Arrow")
+                }
+
+            SettingsScreen()
+
+                .tabItem {
+                    Image("Settings gear")
+                }
         }
         .tint(.yBlack)
         .overlay(

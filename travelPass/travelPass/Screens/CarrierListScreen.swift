@@ -1,3 +1,4 @@
+
 import SwiftUI
 
 struct CarriersListScreen: View {
@@ -10,6 +11,7 @@ struct CarriersListScreen: View {
         HStack {
             Button(action: { dismiss() }) {
                 Image(systemName: "chevron.left")
+                    .font(.title2)
                     .foregroundStyle(.yBlack)
             }
             .padding(.leading, 16)
@@ -44,6 +46,7 @@ struct CarriersListScreen: View {
             .background(.yBlue)
             .cornerRadius(16)
             .padding(.horizontal, 10)
+            .padding(.bottom, 16)
         }
         .navigationBarBackButtonHidden(true)
     }

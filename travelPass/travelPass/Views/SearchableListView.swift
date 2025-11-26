@@ -7,7 +7,7 @@ struct SearchableListView: View {
     @Binding var searchString: String
     let items: [String]
     let onItemSelected: (String) -> Void
-    @Environment(\.dismiss) private var dismiss
+    
 
     var filteredItems: [String] {
         if searchString.isEmpty {
@@ -18,18 +18,6 @@ struct SearchableListView: View {
     }
 
     var body: some View {
-        HStack{
-            Button(action: {dismiss()}) {
-                Image(systemName: "chevron.left")
-                    .foregroundStyle(.yBlack)
-            }
-            .padding(.leading,16)
-            Spacer()
-            Text(title)
-                .font(.system(size: 17, weight: .bold))
-                .padding(.trailing, 16)
-            Spacer()
-        }
         LazyVStack {
             TextField("Введите запрос", text: $searchString)
                 .textFieldStyle(.plain)
