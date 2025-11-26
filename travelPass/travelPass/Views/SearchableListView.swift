@@ -7,7 +7,6 @@ struct SearchableListView: View {
     @Binding var searchString: String
     let items: [String]
     let onItemSelected: (String) -> Void
-    
 
     var filteredItems: [String] {
         if searchString.isEmpty {

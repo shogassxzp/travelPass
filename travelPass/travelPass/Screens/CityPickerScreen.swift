@@ -10,7 +10,7 @@ struct CityPickerScreen: View {
     @State private var cities = ["Москва", "Санкт-Петербург", "Сочи", "Краснодар"]
     @State private var selectedCity: String = ""
     @State private var showingStationPicker = false
-    
+
     var body: some View {
         VStack {
             HStack {

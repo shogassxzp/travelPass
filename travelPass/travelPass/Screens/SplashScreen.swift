@@ -6,7 +6,6 @@ struct SplashScreen: View {
             .resizable()
             .scaledToFill()
             .edgesIgnoringSafeArea(.all)
-            
     }
 }
 

@@ -58,7 +58,9 @@ struct MainScreen: View {
             .frame(maxWidth: .infinity)
 
             if from != "From" && to != "To" {
-                NavigationLink(destination: CarriersListScreen(from: from, to: to)) {
+                Button(action: {
+                    showingCarrierList = true
+                }) {
                     Text("Find")
                         .foregroundStyle(.yWhite)
                         .font(.system(size: 17, weight: .bold))
@@ -78,6 +80,9 @@ struct MainScreen: View {
                 from: $from,
                 to: $to
             )
+        }
+        .fullScreenCover(isPresented: $showingCarrierList) {
+            CarriersListScreen(from: from, to: to)
         }
     }
 
