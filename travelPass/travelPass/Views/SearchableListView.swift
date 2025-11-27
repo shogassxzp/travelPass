@@ -46,7 +46,7 @@ struct SearchableListView: View {
         }
 
         ScrollView {
-            if items.isEmpty {
+            if filteredItems.isEmpty {
                 VStack {
                     Spacer()
 
