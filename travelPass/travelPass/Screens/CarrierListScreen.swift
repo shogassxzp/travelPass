@@ -19,11 +19,17 @@ struct CarriersListScreen: View {
             .padding(.leading, 16)
             Spacer()
         }
+        
         VStack(spacing: 0) {
             Text("\(from) → \(to) ")
                 .font(.system(size: 24, weight: .bold))
                 .padding(16)
-
+//            Реализовать логику для того чтобы показывать EmptyState
+//            Spacer()
+//            Text("Вариантов нет")
+//                .font(.system(size: 24,weight: .bold))
+//            Spacer()
+            
             ScrollView {
                 LazyVStack(spacing: 16) {
                     CarrierCell()
