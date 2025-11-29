@@ -2,6 +2,7 @@ import SwiftUI
 
 struct FiltersScreen: View {
     @Environment(\.dismiss) private var dismiss
+    @Binding var carrierRoute: [CarrierRoute]
 
     @State private var selectedTimes: Set<String> = []
     let timeOptions = [
@@ -20,7 +21,7 @@ struct FiltersScreen: View {
     var body: some View {
         VStack {
             HStack {
-                Button(action: { dismiss() }) {
+                Button(action: { carrierRoute.removeLast() }) {
                     Image(systemName: "chevron.left")
                         .foregroundStyle(.black)
                         .font(.title2)
@@ -73,7 +74,7 @@ struct FiltersScreen: View {
 
             if isApplyButtonEnabled {
                 Button("Применить") {
-                    dismiss()
+                    carrierRoute.removeLast()
                 }
                 .foregroundStyle(.white)
                 .font(.system(size: 17, weight: .bold))
@@ -83,9 +84,8 @@ struct FiltersScreen: View {
                 .padding()
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 
-#Preview {
-    FiltersScreen()
-}
+
