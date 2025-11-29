@@ -8,25 +8,10 @@ struct CityPickerScreen: View {
 
     @State private var searchText = ""
     @State private var cities = ["Москва", "Санкт-Петербург", "Сочи", "Краснодар"]
-    @State private var selectedCity: String = ""
-    @State private var showingStationPicker = false
+    @State private var navigationPath = [String]() 
 
     var body: some View {
-        VStack {
-            HStack {
-                Button(action: { dismiss() }) {
-                    Image(systemName: "chevron.left")
-                        .foregroundStyle(.yBlack)
-                }
-
-                Text("Выбор города")
-                    .font(.system(size: 17, weight: .bold))
-                    .frame(maxWidth: .infinity)
-
-                Spacer()
-            }
-            .padding(.horizontal)
-
+        NavigationStack(path: $navigationPath) {
             SearchableListView(
                 title: "Выбор города",
                 placeholder: "Введите запрос",
@@ -34,22 +19,28 @@ struct CityPickerScreen: View {
                 searchString: $searchText,
                 items: cities
             ) { city in
-                selectedCity = city
 
-                showingStationPicker = true
+                navigationPath.append(city)
             }
-        }
+            .navigationDestination(for: String.self) { city in
 
-        .fullScreenCover(isPresented: $showingStationPicker) {
-            StationPickerScreen(
-                selectedField: selectedField,
-                from: $from,
-                to: $to,
-                selectedCity: $selectedCity,
-                onDismiss: {
-                    dismiss()
+                StationPickerScreen(
+                    selectedField: selectedField,
+                    selectedCity: city,
+                    from: $from,
+                    to: $to,
+                    onDismiss: { dismiss() }
+                )
+            }
+            .navigationTitle("Выбор города")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "chevron.left")
+                    }
                 }
-            )
+            }
         }
     }
 }
