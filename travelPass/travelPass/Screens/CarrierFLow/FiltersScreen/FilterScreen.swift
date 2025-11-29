@@ -20,16 +20,6 @@ struct FiltersScreen: View {
 
     var body: some View {
         VStack {
-            HStack {
-                Button(action: { carrierRoute.removeLast() }) {
-                    Image(systemName: "chevron.left")
-                        .foregroundStyle(.yBlack)
-                        .font(.system(size:17, weight: .semibold))
-                }
-                Spacer()
-            }
-            .padding(.horizontal)
-
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     VStack(alignment: .leading, spacing: 12) {
@@ -85,5 +75,13 @@ struct FiltersScreen: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button(action: { dismiss() }) {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 17, weight: .semibold))
+                }
+            }
+        }
     }
 }

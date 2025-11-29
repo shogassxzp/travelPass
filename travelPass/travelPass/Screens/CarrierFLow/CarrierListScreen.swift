@@ -54,9 +54,10 @@ struct CarriersListScreen: View {
             .navigationBarBackButtonHidden(true)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button(action: {}) {
+                    Button(action: { dismiss() }) {
                         Image(systemName: "chevron.left")
                             .foregroundStyle(.yBlack)
+                            .font(.system(size:17, weight: .semibold))
                     }
                 }
             }
