@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ErrorView: View {
+struct ServerErrorView: View {
     var body: some View {
         let idealHeight: Double = 223
         let minHeight: Double = 180
@@ -15,9 +15,10 @@ struct ErrorView: View {
             .cornerRadius(cornerRadius)
         Text("Server error")
             .font(.system(size: 24, weight: .bold))
+        
     }
 }
 
 #Preview {
-    ErrorView()
+    ServerErrorView()
 }

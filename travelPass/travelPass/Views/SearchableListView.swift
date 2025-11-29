@@ -23,7 +23,7 @@ struct SearchableListView: View {
                 .font(.system(size: 17, weight: .regular))
                 .padding(.horizontal, 30)
                 .frame(height: 36)
-                .background(.yLightGray)
+                .background(.searchGray)
                 .cornerRadius(10)
                 .overlay(
                     HStack {

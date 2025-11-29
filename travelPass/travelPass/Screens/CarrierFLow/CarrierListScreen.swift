@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 struct CarriersListScreen: View {
@@ -58,14 +57,9 @@ struct CarriersListScreen: View {
                     Button(action: {}) {
                         Image(systemName: "chevron.left")
                             .foregroundStyle(.yBlack)
-                            .font(.system(size:17, weight: .semibold))
                     }
                 }
             }
         }
     }
-}
-
-#Preview {
-    CarriersListScreen(from: "Москва", to: "Санкт-Петербург")
 }

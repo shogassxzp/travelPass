@@ -29,9 +29,6 @@
     "Carrier details" : {
 
     },
-    "Find" : {
-
-    },
     "From" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -96,6 +93,9 @@
 
     },
     "Выбор станции" : {
+
+    },
+    "Найти" : {
 
     },
     "Показывать варианты с пересадками" : {

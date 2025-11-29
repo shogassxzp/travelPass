@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct MainScreen: View {
-    @State var from = "From"
-    @State var to = "To"
+    @State var from = "Откуда"
+    @State var to = "Куда"
     @State var showingCityPicker = false
     @State var showingCarrierList = false
     @State var selectedField: FieldType? = nil
@@ -21,7 +21,7 @@ struct MainScreen: View {
                     }) {
                         Text(from)
                             .lineLimit(1)
-                            .foregroundStyle(from == "From" ? .yGray : .yUniversalBlack)
+                            .foregroundStyle(from == "Откуда" ? .yGray : .yUniversalBlack)
                             .font(.system(size: 17, weight: .regular))
                             .padding(20)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -33,7 +33,7 @@ struct MainScreen: View {
                     }) {
                         Text(to)
                             .lineLimit(1)
-                            .foregroundStyle(to == "To" ? .yGray : .yUniversalBlack)
+                            .foregroundStyle(to == "Куда" ? .yGray : .yUniversalBlack)
                             .font(.system(size: 17, weight: .regular))
                             .padding(20)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -58,12 +58,12 @@ struct MainScreen: View {
             .padding(32)
             .frame(maxWidth: .infinity)
 
-            if from != "From" && to != "To" {
+            if from != "Откуда" && to != "Куда" {
                 Button(action: {
                     showingCarrierList = true
                 }) {
-                    Text("Find")
-                        .foregroundStyle(.yWhite)
+                    Text("Найти")
+                        .foregroundStyle(.yUniversalWhite)
                         .font(.system(size: 17, weight: .bold))
                         .padding(.vertical, 20)
                         .padding(.horizontal, 32)
@@ -89,7 +89,7 @@ struct MainScreen: View {
     }
 
     private func revert() {
-        guard from != "From", to != "To" else { return }
+        guard from != "Откуда", to != "Куда" else { return }
         let temp = from
         from = to
         to = temp

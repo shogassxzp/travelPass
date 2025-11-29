@@ -23,6 +23,7 @@ struct CarrierCell: View {
                 HStack(spacing: 8) {
                     Text("22:30")
                         .font(.system(size: 17, weight: .regular))
+                        .foregroundColor(.yUniversalBlack)
 
                     Rectangle()
                         .fill(Color.yGray)
