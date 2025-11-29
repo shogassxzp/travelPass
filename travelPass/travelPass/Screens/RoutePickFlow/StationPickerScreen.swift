@@ -6,7 +6,7 @@ struct StationPickerScreen: View {
     @Binding var from: String
     @Binding var to: String
     let onDismiss: () -> Void
-    
+
     @Environment(\.dismiss) private var dismiss
 
     @State private var searchText = ""
@@ -34,8 +34,10 @@ struct StationPickerScreen: View {
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Button(action: {dismiss()}) {
+                Button(action: { dismiss() }) {
                     Image(systemName: "chevron.left")
+                        .foregroundStyle(.yBlack)
+                        .font(.system(size:17, weight: .semibold))
                 }
             }
         }

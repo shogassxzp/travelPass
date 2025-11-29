@@ -75,7 +75,7 @@ struct SearchableListView: View {
 
                                 Image(systemName: "chevron.right")
                                     .foregroundStyle(.yBlack)
-                                    .font(.system(size: 14))
+                                    .font(.system(size: 14,weight: .semibold))
                                     .padding(.trailing, 24)
                             }
                             .padding(.vertical, 12)

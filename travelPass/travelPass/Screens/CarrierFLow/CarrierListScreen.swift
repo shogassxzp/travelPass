@@ -25,7 +25,7 @@ struct CarriersListScreen: View {
                         ForEach(0 ..< 8, id: \.self) { _ in
                             CarrierCell()
                                 .onTapGesture {
-                                    carrierRoute.append(.carrierDetails("Carrier_\(UUID().uuid)"))
+                                    carrierRoute.append(.carrierDetails("Carrier details"))
                                 }
                         }
                     }
@@ -58,6 +58,7 @@ struct CarriersListScreen: View {
                     Button(action: {}) {
                         Image(systemName: "chevron.left")
                             .foregroundStyle(.yBlack)
+                            .font(.system(size:17, weight: .semibold))
                     }
                 }
             }

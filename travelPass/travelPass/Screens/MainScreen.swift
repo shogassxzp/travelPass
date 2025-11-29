@@ -87,7 +87,6 @@ struct MainScreen: View {
         }
         .backgroundStyle(.yWhite)
     }
-        
 
     private func revert() {
         guard from != "From", to != "To" else { return }

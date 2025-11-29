@@ -1,16 +1,9 @@
-//
-//  CheckBox.swift
-//  travelPass
-//
-//  Created by Игнат Рогачевич on 26.11.25.
-//
-
 import SwiftUI
 
 struct SquareCheckbox: View {
     let isSelected: Bool
     let action: () -> Void
-    
+
     var body: some View {
         Button(action: action) {
             Image(systemName: isSelected ? "checkmark.square.fill" : "square")
@@ -20,11 +13,10 @@ struct SquareCheckbox: View {
     }
 }
 
-
 struct RadioButton: View {
     let isSelected: Bool
     let action: () -> Void
-    
+
     var body: some View {
         Button(action: action) {
             Image(systemName: isSelected ? "record.circle" : "circle")

@@ -23,8 +23,8 @@ struct FiltersScreen: View {
             HStack {
                 Button(action: { carrierRoute.removeLast() }) {
                     Image(systemName: "chevron.left")
-                        .foregroundStyle(.black)
-                        .font(.title2)
+                        .foregroundStyle(.yBlack)
+                        .font(.system(size:17, weight: .semibold))
                 }
                 Spacer()
             }
@@ -87,5 +87,3 @@ struct FiltersScreen: View {
         .navigationBarBackButtonHidden(true)
     }
 }
-
-

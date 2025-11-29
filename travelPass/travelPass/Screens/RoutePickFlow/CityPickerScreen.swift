@@ -8,7 +8,7 @@ struct CityPickerScreen: View {
 
     @State private var searchText = ""
     @State private var cities = ["Москва", "Санкт-Петербург", "Сочи", "Краснодар"]
-    @State private var navigationPath = [String]() 
+    @State private var navigationPath = [String]()
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -38,6 +38,8 @@ struct CityPickerScreen: View {
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: { dismiss() }) {
                         Image(systemName: "chevron.left")
+                            .foregroundStyle(.yBlack)
+                            .font(.system(size:17, weight: .semibold))
                     }
                 }
             }
