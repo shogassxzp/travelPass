@@ -7,7 +7,7 @@ struct ContentView: View {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Text("About project")
         }
         .padding()
         .onAppear {
@@ -18,7 +18,7 @@ struct ContentView: View {
 //            testRouteStationService()
 //            testNearestCityService()
 //            testStationsListService()
-            testCarrierInfoService()
+//            testCarrierInfoService()
         }
     }
 

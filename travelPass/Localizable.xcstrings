@@ -1,0 +1,115 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@ → %@ " : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ → %2$@ "
+          }
+        }
+      }
+    },
+    "08:15" : {
+
+    },
+    "14 января" : {
+
+    },
+    "20 часов" : {
+
+    },
+    "22:30" : {
+
+    },
+    "About project" : {
+
+    },
+    "Carrier details" : {
+
+    },
+    "From" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Откуда"
+          }
+        }
+      }
+    },
+    "No internet" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет интернета"
+          }
+        }
+      }
+    },
+    "Server error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ошибка сервера"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Настройки"
+          }
+        }
+      }
+    },
+    "To" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Куда"
+          }
+        }
+      }
+    },
+    "Введите запрос" : {
+
+    },
+    "Время отправления" : {
+
+    },
+    "Выбор города" : {
+
+    },
+    "Выбор станции" : {
+
+    },
+    "Найти" : {
+
+    },
+    "Показывать варианты с пересадками" : {
+
+    },
+    "Применить" : {
+
+    },
+    "РЖД" : {
+
+    },
+    "Уточнить время" : {
+
+    }
+  },
+  "version" : "1.1"
+}
