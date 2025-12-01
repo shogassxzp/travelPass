@@ -60,7 +60,7 @@ struct SearchableListView: View {
                 }
                 .frame(height: UIScreen.main.bounds.height * 0.8)
             } else {
-                LazyVStack(spacing: 0) {
+                LazyVStack(spacing: 16) {
                     ForEach(filteredItems, id: \.self) { item in
                         Button(action: {
                             onItemSelected(item)
@@ -90,3 +90,4 @@ struct SearchableListView: View {
         searchString = ""
     }
 }
+
