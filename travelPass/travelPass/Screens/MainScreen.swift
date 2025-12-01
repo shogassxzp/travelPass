@@ -23,7 +23,8 @@ struct MainScreen: View {
                             .lineLimit(1)
                             .foregroundStyle(from == "Откуда" ? .yGray : .yUniversalBlack)
                             .font(.system(size: 17, weight: .regular))
-                            .padding(20)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 14)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
 
@@ -35,7 +36,8 @@ struct MainScreen: View {
                             .lineLimit(1)
                             .foregroundStyle(to == "Куда" ? .yGray : .yUniversalBlack)
                             .font(.system(size: 17, weight: .regular))
-                            .padding(20)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 14)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
@@ -55,7 +57,7 @@ struct MainScreen: View {
             }
             .background(.yBlue)
             .cornerRadius(20)
-            .padding(32)
+            .padding(16)
             .frame(maxWidth: .infinity)
 
             if from != "Откуда" && to != "Куда" {
@@ -65,7 +67,6 @@ struct MainScreen: View {
                     Text("Найти")
                         .foregroundStyle(.yUniversalWhite)
                         .font(.system(size: 17, weight: .bold))
-                        .padding(.vertical, 20)
                         .padding(.horizontal, 32)
                 }
                 .frame(maxWidth: 150, maxHeight: 60)
