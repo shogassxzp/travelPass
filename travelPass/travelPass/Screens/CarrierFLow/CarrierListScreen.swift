@@ -9,7 +9,7 @@ struct CarriersListScreen: View {
 
     var body: some View {
         NavigationStack(path: $carrierRoute) {
-            VStack(spacing: 0) {
+            VStack(spacing: .zero) {
                 Text("\(from) → \(to) ")
                     .font(.system(size: 24, weight: .bold))
                     .padding(16)
