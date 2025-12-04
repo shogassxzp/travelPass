@@ -38,6 +38,9 @@
     "exampleMail" : {
 
     },
+    "Find" : {
+
+    },
     "From" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -112,9 +115,6 @@
 
     },
     "Информация о перевозчике" : {
-
-    },
-    "Найти" : {
 
     },
     "ОАО «РЖД»" : {

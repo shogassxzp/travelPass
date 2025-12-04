@@ -1,18 +1,39 @@
 import SwiftUI
 
 struct MainScreen: View {
-    @State var from = "Откуда"
-    @State var to = "Куда"
+    @State var from = "From"
+    @State var to = "To"
     @State var showingCityPicker = false
     @State var showingCarrierList = false
     @State var selectedField: FieldType? = nil
-
+    @State var showStories = false
+    @State var selectedStoryIndex = 0
+    
+    @State private var stories = Story.stories
+    
     enum FieldType {
         case from, to
     }
 
     var body: some View {
-        VStack {
+        VStack(spacing: 16) {
+            ScrollView(.horizontal,showsIndicators: false) {
+                LazyHGrid(rows: [GridItem(.fixed(140))],spacing: 12) {
+                    ForEach(Array(stories.enumerated()),id: \.element.id) { index, story in
+                        Button(action: {
+                        selectedStoryIndex = index
+                            stories[index].isViewed = true
+                            showStories = true
+                        }) {
+                            StoryCell(story: story)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                }
+                .padding(.horizontal, 16)
+                .padding(.bottom,20)
+            }
+            
             HStack {
                 VStack {
                     Button(action: {
@@ -21,10 +42,9 @@ struct MainScreen: View {
                     }) {
                         Text(from)
                             .lineLimit(1)
-                            .foregroundStyle(from == "Откуда" ? .yGray : .yUniversalBlack)
+                            .foregroundStyle(from == "From" ? .yGray : .yUniversalBlack)
                             .font(.system(size: 17, weight: .regular))
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 14)
+                            .padding(20)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
 
@@ -34,10 +54,9 @@ struct MainScreen: View {
                     }) {
                         Text(to)
                             .lineLimit(1)
-                            .foregroundStyle(to == "Куда" ? .yGray : .yUniversalBlack)
+                            .foregroundStyle(to == "To" ? .yGray : .yUniversalBlack)
                             .font(.system(size: 17, weight: .regular))
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 14)
+                            .padding(20)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
@@ -57,16 +76,17 @@ struct MainScreen: View {
             }
             .background(.yBlue)
             .cornerRadius(20)
-            .padding(16)
+            .padding(.horizontal, 32)
             .frame(maxWidth: .infinity)
 
-            if from != "Откуда" && to != "Куда" {
+            if from != "From" && to != "To" {
                 Button(action: {
                     showingCarrierList = true
                 }) {
-                    Text("Найти")
-                        .foregroundStyle(.yUniversalWhite)
+                    Text("Find")
+                        .foregroundStyle(.yWhite)
                         .font(.system(size: 17, weight: .bold))
+                        .padding(.vertical, 20)
                         .padding(.horizontal, 32)
                 }
                 .frame(maxWidth: 150, maxHeight: 60)
@@ -75,7 +95,13 @@ struct MainScreen: View {
             }
             Spacer()
         }
-
+        .fullScreenCover(isPresented: $showStories) {
+            StoriesFullScreenView(
+                stories: $stories,
+                currentIndex: $selectedStoryIndex,
+                isPresented: $showStories
+            )
+        }
         .fullScreenCover(isPresented: $showingCityPicker) {
             CityPickerScreen(
                 selectedField: selectedField ?? .from,
@@ -88,15 +114,11 @@ struct MainScreen: View {
         }
         .backgroundStyle(.yWhite)
     }
-
+        
     private func revert() {
-        guard from != "Откуда", to != "Куда" else { return }
+        guard from != "From", to != "To" else { return }
         let temp = from
         from = to
         to = temp
     }
-}
-
-#Preview {
-    MainScreen()
 }
