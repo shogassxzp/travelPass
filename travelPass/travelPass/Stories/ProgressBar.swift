@@ -1,21 +1,44 @@
+// ProgressBar.swift
 import SwiftUI
 
-struct ProgressBar: View {
-    let progress: CGFloat
-    let isActive: Bool
+extension CGFloat {
+    static let progressBarCornerRadius: CGFloat = 3
+    static let progressBarHeight: CGFloat = 6
+}
 
+struct ProgressBar: View {
+    let numberOfSections: Int
+    let progress: CGFloat
+    
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
-                RoundedRectangle(cornerRadius: 1.5)
-                    .fill(Color.yUniversalWhite.opacity(0.3))
-                    .frame(height: 6)
+                
+                RoundedRectangle(cornerRadius: .progressBarCornerRadius)
+                    .frame(width: geometry.size.width, height: .progressBarHeight)
+                    .foregroundColor(Color.yUniversalWhite)
+                
+                RoundedRectangle(cornerRadius: .progressBarCornerRadius)
+                    .frame(
+                        width: min(
+                            progress * geometry.size.width,
+                            geometry.size.width
+                        ),
+                        height: .progressBarHeight
+                    )
+                    .foregroundColor(.yBlue)
+                    .animation(.linear(duration: 0.1), value: progress)
+            }
 
-                RoundedRectangle(cornerRadius: 1.5)
-                    .fill(isActive ? Color.yUniversalWhite : Color.yBlue)
-                    .frame(width: geometry.size.width * progress, height: 6)
+            .mask {
+                HStack(spacing: 2) {
+                    ForEach(0..<numberOfSections, id: \.self) { _ in
+                        RoundedRectangle(cornerRadius: .progressBarCornerRadius)
+                            .frame(height: .progressBarHeight)
+                    }
+                }
             }
         }
-        .frame(height: 6)
+        .frame(height: .progressBarHeight)
     }
 }
