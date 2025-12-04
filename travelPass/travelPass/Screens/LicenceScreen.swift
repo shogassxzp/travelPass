@@ -2,6 +2,7 @@ import SwiftUI
 
 struct LicenceScreen: View {
     @Binding var showLicence: Bool
+
     var body: some View {
         HStack {
             Button(action: { showLicence = false }) {
@@ -15,7 +16,7 @@ struct LicenceScreen: View {
             Spacer()
         }
         .padding(.horizontal)
-        
+
         ScrollView {
             VStack(alignment: .leading) {
                 Text("Оферта на оказание образовательных услуг дополнительного образования Яндекс.Практикум для физических лиц")
