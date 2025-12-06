@@ -15,7 +15,7 @@ struct SettingsScreen: View {
                         .foregroundStyle(.yBlack)
                         .font(.system(size: 17, weight: .regular))
                     Spacer()
-                    Image(systemName: "chevron.right")
+                    Image(systemName: Chevron.right)
                         .font(.system(size: 17,weight: .semibold))
                         .foregroundStyle(.yBlack)
                 }

@@ -78,7 +78,7 @@ struct FiltersScreen: View {
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button(action: { dismiss() }) {
-                    Image(systemName: "chevron.left")
+                    Image(systemName: Chevron.left)
                         .font(.system(size: 17, weight: .semibold))
                 }
             }

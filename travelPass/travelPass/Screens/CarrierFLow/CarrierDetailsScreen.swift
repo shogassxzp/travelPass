@@ -37,7 +37,7 @@ struct CarrierDetails: View {
                     .toolbar {
                         ToolbarItem(placement: .topBarLeading) {
                             Button(action: { carrierRoute.removeLast() }) {
-                                Image(systemName: "chevron.left")
+                                Image(systemName: Chevron.left)
                                     .foregroundStyle(.yBlack)
                                     .font(.system(size: 17, weight: .semibold))
                             }
