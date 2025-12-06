@@ -5,7 +5,7 @@ struct SettingsScreen: View {
     @State var showLicence = false
     var body: some View {
         VStack {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 25) {
                 Toggle("Тёмная тема", isOn: $themeManager.isDarkMode)
                     .font(.system(size: 17, weight: .regular))
                     .toggleStyle(SwitchToggleStyle(tint: .blue))

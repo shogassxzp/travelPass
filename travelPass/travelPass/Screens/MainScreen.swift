@@ -8,9 +8,9 @@ struct MainScreen: View {
     @State var selectedField: FieldType? = nil
     @State var showStories = false
     @State var selectedStoryIndex = 0
-    
+
     @State private var stories = Story.stories
-    
+
     enum FieldType {
         case from, to
     }
@@ -40,7 +40,7 @@ struct MainScreen: View {
                 }
                 .frame(height: 180)
             }
-            
+
             VStack(spacing: 16) {
                 HStack {
                     VStack {
@@ -52,7 +52,8 @@ struct MainScreen: View {
                                 .lineLimit(1)
                                 .foregroundStyle(from == "Откуда" ? .yGray : .yUniversalBlack)
                                 .font(.system(size: 17, weight: .regular))
-                                .padding(20)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 14)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
 
@@ -64,7 +65,8 @@ struct MainScreen: View {
                                 .lineLimit(1)
                                 .foregroundStyle(to == "Куда" ? .yGray : .yUniversalBlack)
                                 .font(.system(size: 17, weight: .regular))
-                                .padding(20)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 14)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }
@@ -84,7 +86,7 @@ struct MainScreen: View {
                 }
                 .background(.yBlue)
                 .cornerRadius(20)
-                .padding(.horizontal, 32)
+                .padding(.horizontal, 16)
                 .frame(maxWidth: .infinity)
 
                 if from != "Откуда" && to != "Куда" {
@@ -101,7 +103,7 @@ struct MainScreen: View {
                     .background(.yBlue)
                     .cornerRadius(16)
                 }
-                
+
                 Spacer()
             }
         }
@@ -124,7 +126,7 @@ struct MainScreen: View {
         }
         .backgroundStyle(.yWhite)
     }
-        
+
     private func revert() {
         guard from != "Откуда", to != "Куда" else { return }
         let temp = from
