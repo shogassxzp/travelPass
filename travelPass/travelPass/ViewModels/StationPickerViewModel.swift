@@ -1,5 +1,5 @@
-import SwiftUI
 import Combine
+import Foundation
 
 @MainActor
 class StationPickerViewModel: ObservableObject {
