@@ -73,7 +73,7 @@ struct SearchableListView: View {
 
                                 Spacer()
 
-                                Image(systemName: "chevron.right")
+                                Image(systemName: Chevron.right)
                                     .foregroundStyle(.yBlack)
                                     .font(.system(size: 14,weight: .semibold))
                                     .padding(.trailing, 24)

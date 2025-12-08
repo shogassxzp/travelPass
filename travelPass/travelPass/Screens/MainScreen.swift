@@ -6,76 +6,114 @@ struct MainScreen: View {
     @State var showingCityPicker = false
     @State var showingCarrierList = false
     @State var selectedField: FieldType? = nil
+    @State var showStories = false
+    @State var selectedStoryIndex = 0
+
+    @State private var stories = Story.stories
 
     enum FieldType {
         case from, to
     }
 
     var body: some View {
-        VStack {
-            HStack {
-                VStack {
-                    Button(action: {
-                        selectedField = .from
-                        showingCityPicker = true
-                    }) {
-                        Text(from)
-                            .lineLimit(1)
-                            .foregroundStyle(from == "Откуда" ? .yGray : .yUniversalBlack)
-                            .font(.system(size: 17, weight: .regular))
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 14)
-                            .frame(maxWidth: .infinity, alignment: .leading)
+        VStack(spacing: 16) {
+            VStack(alignment: .leading, spacing: 8) {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    LazyHGrid(
+                        rows: [GridItem(.fixed(140))],
+                        spacing: 12
+                    ) {
+                        ForEach(Array(stories.enumerated()), id: \.element.id) { index, story in
+                            Button(action: {
+                                selectedStoryIndex = index
+                                stories[index].isViewed = true
+                                showStories = true
+                            }) {
+                                StoryCell(story: story)
+                                    .frame(width: 90, height: 140)
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                        }
                     }
-
-                    Button(action: {
-                        selectedField = .to
-                        showingCityPicker = true
-                    }) {
-                        Text(to)
-                            .lineLimit(1)
-                            .foregroundStyle(to == "Куда" ? .yGray : .yUniversalBlack)
-                            .font(.system(size: 17, weight: .regular))
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 14)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
                 }
-                .background(.white)
-                .cornerRadius(20)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(16)
-
-                Button(action: { revert() }) {
-                    Image(systemName: "arrow.2.squarepath")
-                        .frame(width: 36, height: 36)
-                        .foregroundStyle(.yBlue)
-                        .background(.yUniversalWhite)
-                        .cornerRadius(40)
-                        .padding(.trailing, 16)
-                }
+                .frame(height: 180)
             }
-            .background(.yBlue)
-            .cornerRadius(20)
-            .padding(16)
-            .frame(maxWidth: .infinity)
 
-            if from != "Откуда" && to != "Куда" {
-                Button(action: {
-                    showingCarrierList = true
-                }) {
-                    Text("Найти")
-                        .foregroundStyle(.yUniversalWhite)
-                        .font(.system(size: 17, weight: .bold))
-                        .padding(.horizontal, 32)
+            VStack(spacing: 16) {
+                HStack {
+                    VStack {
+                        Button(action: {
+                            selectedField = .from
+                            showingCityPicker = true
+                        }) {
+                            Text(from)
+                                .lineLimit(1)
+                                .foregroundStyle(from == "Откуда" ? .yGray : .yUniversalBlack)
+                                .font(.system(size: 17, weight: .regular))
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 14)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+
+                        Button(action: {
+                            selectedField = .to
+                            showingCityPicker = true
+                        }) {
+                            Text(to)
+                                .lineLimit(1)
+                                .foregroundStyle(to == "Куда" ? .yGray : .yUniversalBlack)
+                                .font(.system(size: 17, weight: .regular))
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 14)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
+                    .background(.white)
+                    .cornerRadius(20)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(16)
+
+                    Button(action: { revert() }) {
+                        Image(systemName: "arrow.2.squarepath")
+                            .frame(width: 36, height: 36)
+                            .foregroundStyle(.yBlue)
+                            .background(.yUniversalWhite)
+                            .cornerRadius(40)
+                            .padding(.trailing, 16)
+                    }
                 }
-                .frame(maxWidth: 150, maxHeight: 60)
                 .background(.yBlue)
-                .cornerRadius(16)
-            }
-            Spacer()
-        }
+                .cornerRadius(20)
+                .padding(.horizontal, 16)
+                .frame(maxWidth: .infinity)
 
+                if from != "Откуда" && to != "Куда" {
+                    Button(action: {
+                        showingCarrierList = true
+                    }) {
+                        Text("Find")
+                            .foregroundStyle(.yUniversalWhite)
+                            .font(.system(size: 17, weight: .bold))
+                            .padding(.vertical, 20)
+                            .padding(.horizontal, 32)
+                    }
+                    .frame(maxWidth: 150, maxHeight: 60)
+                    .background(.yBlue)
+                    .cornerRadius(16)
+                }
+
+                Spacer()
+            }
+        }
+        .fullScreenCover(isPresented: $showStories) {
+            StoriesFullScreenView(
+                stories: $stories,
+                currentIndex: $selectedStoryIndex,
+                isPresented: $showStories
+            )
+        }
         .fullScreenCover(isPresented: $showingCityPicker) {
             CityPickerScreen(
                 selectedField: selectedField ?? .from,
@@ -95,8 +133,4 @@ struct MainScreen: View {
         from = to
         to = temp
     }
-}
-
-#Preview {
-    MainScreen()
 }

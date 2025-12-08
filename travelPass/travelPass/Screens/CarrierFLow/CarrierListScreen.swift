@@ -55,7 +55,7 @@ struct CarriersListScreen: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: { dismiss() }) {
-                        Image(systemName: "chevron.left")
+                        Image(systemName: Chevron.left)
                             .foregroundStyle(.yBlack)
                             .font(.system(size:17, weight: .semibold))
                     }
