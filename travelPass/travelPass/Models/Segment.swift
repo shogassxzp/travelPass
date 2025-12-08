@@ -6,10 +6,11 @@ struct Segment: Codable, Identifiable, Sendable {
     let to: Station
     let departure: String
     let arrival: String
+    let thread: Thread
     let duration: Int
     
     enum CodingKeys: String, CodingKey {
-        case from, to, departure, arrival, duration
+        case from, to, departure, arrival, thread, duration
     }
     
     var durationString: String {

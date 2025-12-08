@@ -7,10 +7,10 @@ struct Carrier: Codable, Identifiable, Sendable {
     let phone: String?
     let email: String?
     let url: String?
-    let adress: String?
+    let address: String?
     let logo: String?
     
     enum CodingKeys: String, CodingKey {
-        case code, title, phone, email, url, adress, logo
+        case code, title, phone, email, url, address, logo
     }
 }
