@@ -1,6 +1,6 @@
 import Foundation
 
-struct Carrier: Codable, Identifiable, Sendable {
+struct Carrier: Codable, Identifiable, Sendable, Hashable {
     let id = UUID()
     let code: Int
     let title: String
