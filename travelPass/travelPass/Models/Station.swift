@@ -1,7 +1,6 @@
 import Foundation
 
 struct Station: Codable, Identifiable, Hashable, Sendable {
-    let id = UUID()
     let title: String
     let code: String
     let stationType: String?
@@ -9,6 +8,8 @@ struct Station: Codable, Identifiable, Hashable, Sendable {
     let lat: Double?
     let lng: Double?
     let distance: Double?
+    
+    var id: String { code }
     
     enum CodingKeys: String, CodingKey {
         case title, code
