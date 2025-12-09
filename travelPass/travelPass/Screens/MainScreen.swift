@@ -1,25 +1,17 @@
 import SwiftUI
 
 struct MainScreen: View {
-    @State var from = "Откуда"
-    @State var to = "Куда"
-    @State var showingCityPicker = false
-    @State var showingCarrierList = false
-    @State var selectedField: FieldType? = nil
+    @StateObject private var viewModel = MainScreenViewModel()
     @State var showStories = false
     @State var selectedStoryIndex = 0
-    
     @State private var stories = Story.stories
-    
-    enum FieldType {
-        case from, to
-    }
-    
+
     // MARK: - Body
+
     var body: some View {
         VStack(spacing: 16) {
             storiesSection
-            
+
             VStack(spacing: 16) {
                 routeSelector
                 findButton
@@ -29,17 +21,17 @@ struct MainScreen: View {
         .fullScreenCover(isPresented: $showStories) {
             storiesFullScreen
         }
-        .fullScreenCover(isPresented: $showingCityPicker) {
+        .fullScreenCover(isPresented: $viewModel.showingCityPicker) {
             cityPickerScreen
         }
-        .fullScreenCover(isPresented: $showingCarrierList) {
+        .fullScreenCover(isPresented: $viewModel.showingCarrierList) {
             carriersListScreen
         }
         .backgroundStyle(.yWhite)
     }
-    
+
     // MARK: - Subviews
-    
+
     // Stories Section
     private var storiesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -64,20 +56,20 @@ struct MainScreen: View {
             .frame(height: 180)
         }
     }
-    
+
     // Route Selector
     private var routeSelector: some View {
         HStack {
             VStack {
                 cityButton(
-                    text: from,
-                    isPlaceholder: from == "Откуда",
+                    text: viewModel.from,
+                    isPlaceholder: viewModel.from == "Откуда",
                     fieldType: .from
                 )
-                
+
                 cityButton(
-                    text: to,
-                    isPlaceholder: to == "Куда",
+                    text: viewModel.to,
+                    isPlaceholder: viewModel.to == "Куда",
                     fieldType: .to
                 )
             }
@@ -85,7 +77,7 @@ struct MainScreen: View {
             .cornerRadius(20)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(16)
-            
+
             swapButton
         }
         .background(.yBlue)
@@ -93,13 +85,17 @@ struct MainScreen: View {
         .padding(.horizontal, 16)
         .frame(maxWidth: .infinity)
     }
-    
+
     // Find Button
     private var findButton: some View {
         Group {
-            if from != "Откуда" && to != "Куда" {
+            if viewModel.isFindButtonEnabled {
                 Button(action: {
-                    showingCarrierList = true
+                    Task {
+                        if await viewModel.validateRoute() {
+                            viewModel.showingCarrierList = true
+                        }
+                    }
                 }) {
                     Text("Найти")
                         .foregroundStyle(.yUniversalWhite)
@@ -110,10 +106,11 @@ struct MainScreen: View {
                 .frame(maxWidth: 150, maxHeight: 60)
                 .background(.yBlue)
                 .cornerRadius(16)
+                .disabled(viewModel.isLoading)
             }
         }
     }
-    
+
     // FullScreen Views
     private var storiesFullScreen: some View {
         StoriesFullScreenView(
@@ -122,25 +119,24 @@ struct MainScreen: View {
             isPresented: $showStories
         )
     }
-    
+
     private var cityPickerScreen: some View {
         CityPickerScreen(
-            selectedField: selectedField ?? .from,
-            from: $from,
-            to: $to
+            selectedField: viewModel.selectedField ?? .from,
+            from: $viewModel.from,
+            to: $viewModel.to
         )
     }
-    
+
     private var carriersListScreen: some View {
-        CarriersListScreen(from: from, to: to)
+        CarriersListScreen(from: viewModel.from, to: viewModel.to)
     }
-    
+
     // MARK: - Helper Views
-    
-    private func cityButton(text: String, isPlaceholder: Bool, fieldType: FieldType) -> some View {
+
+    private func cityButton(text: String, isPlaceholder: Bool, fieldType: MainScreenViewModel.FieldType) -> some View {
         Button(action: {
-            selectedField = fieldType
-            showingCityPicker = true
+            viewModel.selectField(fieldType)
         }) {
             Text(text)
                 .lineLimit(1)
@@ -151,9 +147,11 @@ struct MainScreen: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
-    
+
     private var swapButton: some View {
-        Button(action: revert) {
+        Button(action: {
+            viewModel.revert()
+        }) {
             Image(systemName: "arrow.2.squarepath")
                 .frame(width: 36, height: 36)
                 .foregroundStyle(.yBlue)
@@ -162,16 +160,9 @@ struct MainScreen: View {
                 .padding(.trailing, 16)
         }
     }
-    
+
     // MARK: - Actions
-    
-    private func revert() {
-        guard from != "Откуда", to != "Куда" else { return }
-        let temp = from
-        from = to
-        to = temp
-    }
-    
+
     private func selectStory(at index: Int) {
         selectedStoryIndex = index
         stories[index].isViewed = true
