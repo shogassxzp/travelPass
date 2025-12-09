@@ -1,44 +1,70 @@
 import Combine
+import Foundation
 
 @MainActor
 class MainScreenViewModel: ObservableObject {
-    @Published var fromText = "Откуда"
-    @Published var toText = "Куда"
+    // MARK: - Published properties
+
+    @Published var from = "Откуда"
+    @Published var to = "Куда"
+    @Published var showingCityPicker = false
+    @Published var showingCarrierList = false
+    @Published var selectedField: FieldType? = nil
     @Published var isLoading = false
     @Published var errorMessage: String?
-    
-    // Для навигации
-    @Published var showingCityPicker = false
-    @Published var selectedField: FieldType? = nil
-    @Published var navigationPath = [Route]()
-    
+
+    // MARK: - Dependencies
+
+    private let stationService: StationService
+
+    // MARK: - Types
+
     enum FieldType {
         case from, to
     }
-    
-    enum Route: Hashable {
-        case carrierList(from: String, to: String)
-        case cityPicker(FieldType)
-        case stationPicker(FieldType, Settlement)
+
+    // MARK: - Initializer
+
+    init(stationService: StationService = DIContainer.shared.stationService) {
+        self.stationService = stationService
+        print("MainScreenViewModel created with stationService")
     }
-    
+
+    // MARK: - Computed Properties
+
     var isFindButtonEnabled: Bool {
-        fromText != "Откуда" && toText != "Куда" && !isLoading
+        from != "Откуда" && to != "Куда"
     }
-    
-    func swapCities() {
-        guard fromText != "Откуда", toText != "Куда" else { return }
-        let temp = fromText
-        fromText = toText
-        toText = temp
-    }
-    
+
+    // MARK: - Public Methods
+
     func selectField(_ field: FieldType) {
         selectedField = field
         showingCityPicker = true
     }
-    
-    func navigateToCarrierList() {
-        navigationPath.append(.carrierList(from: fromText, to: toText))
+
+    func revert() {
+        guard from != "Откуда", to != "Куда" else { return }
+        let temp = from
+        from = to
+        to = temp
+    }
+
+    func validateRoute() async -> Bool {
+        guard isFindButtonEnabled else { return false }
+
+        isLoading = true
+        errorMessage = nil
+
+        do {
+            // Пробуем найти сегменты (пока с мок-данными)
+            let _ = try await stationService.searchSegments(from: from, to: to)
+            isLoading = false
+            return true
+        } catch {
+            isLoading = false
+            errorMessage = error.localizedDescription
+            return false
+        }
     }
 }
