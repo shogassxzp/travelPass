@@ -1,6 +1,4 @@
-
 import Foundation
-import SwiftUI
 import Combine
 
 @MainActor
@@ -16,262 +14,185 @@ class StationService: ObservableObject {
         self.networkClient = NetworkClient(apiKey: apiKey)
     }
     
-    // Поиск города по названию (через наш список координат)
-    func searchCity(_ query: String) async -> [Settlement] {
-        guard !query.isEmpty else { return [] }
-        
-        let matchingCities = CityCoordinates.cities.filter { city in
-            city.name.lowercased().contains(query.lowercased())
-        }
-        
-        return matchingCities.map { city in
-            Settlement(
-                title: city.name,
-                code: "", // Код получим из API
-                lat: city.lat,
-                lng: city.lng
-            )
-        }
-    }
+    //MARK: - Методы API
     
-    // Получаем станции для города
-    func getStationsForCity(_ settlement: Settlement, radius: Int = 20) async {
+    func searchSegments(from: String, to: String, date: Date? = nil) async throws -> [Segment] {
         isLoading = true
         errorMessage = nil
         
         do {
-            // Сначала получаем код города через nearest_settlement
-            let nearestCity = try await networkClient.getNearestCity(
-                lat: settlement.lat,
-                lng: settlement.lng,
-                distance: radius
-            )
             
-            // Теперь получаем станции вокруг города
-            let stations = try await networkClient.getNearestStations(
-                lat: nearestCity.lat,
-                lng: nearestCity.lng,
-                distance: radius
-            )
+            let fromCode = parseStationCode(from)
+            let toCode = parseStationCode(to)
             
-            await MainActor.run {
-                self.searchResults = stations
+            let dateString: String?
+            if let date = date {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "dd-MM-yyyy"
+                dateString = formatter.string(from: date)
+            } else {
+                dateString = nil
             }
-            
-        } catch {
-            await MainActor.run {
-                self.errorMessage = error.localizedDescription
-                // Если API не работает, возвращаем мок данные
-                self.searchResults = self.getMockStations(for: settlement.title)
-            }
-        }
-        
-        isLoading = false
-    }
-    
-    // Поиск рейсов между станциями
-    func searchSegments(fromStationCode: String, toStationCode: String) async {
-        isLoading = true
-        errorMessage = nil
-        
-        do {
             let segments = try await networkClient.searchSegments(
-                from: fromStationCode,
-                to: toStationCode,
-                date: getCurrentDate()
-            )
-            
-            await MainActor.run {
-                self.searchSegments = segments
-            }
-            
+                from: fromCode,
+                to: toCode,
+                date: dateString
+                )
+            isLoading = false
+            return segments
         } catch {
-            await MainActor.run {
-                self.errorMessage = error.localizedDescription
-                // Возвращаем мок данные для тестирования
-                self.searchSegments = self.getMockSegments()
-            }
+            isLoading = false
+            errorMessage = error.localizedDescription
+            throw error
         }
-        
-        isLoading = false
     }
     
-    // Получаем информацию о перевозчике
+    private func parseStationCode(_ text: String) -> String {
+           // Пока просто возвращаем дефолтные значения
+           // Позже реализуем полноценный парсинг
+           if text.contains("Москва") {
+               return "s9600213"  // Москва Курский вокзал
+           } else if text.contains("Санкт-Петербург") {
+               return "s9600366"  // СПб Московский вокзал
+           } else if text.contains("Казань") {
+               return "s9604000"  // Казань
+           } else {
+               return "s9600213"  // Дефолт
+           }
+       }
+    
     func getCarrierInfo(carrierCode: String) async throws -> Carrier? {
-        try await networkClient.getCarrierInfo(code: carrierCode)
-    }
-    
-    // MARK: - Mock данные для разработки
-    
-    private func getMockStations(for city: String) -> [Station] {
-        switch city {
-        case "Москва":
-            return [
-                Station(
-                    title: "Москва (Курский вокзал)",
-                    code: "s9600213",
-                    stationType: "train_station",
-                    transportType: "train",
-                    lat: 55.756,
-                    lng: 37.658,
-                    distance: 0.5
-                ),
-                Station(
-                    title: "Москва (Ленинградский вокзал)",
-                    code: "s9600215",
-                    stationType: "train_station",
-                    transportType: "train",
-                    lat: 55.776,
-                    lng: 37.655,
-                    distance: 1.2
-                ),
-                Station(
-                    title: "Москва (Казанский вокзал)",
-                    code: "s9600217",
-                    stationType: "train_station",
-                    transportType: "train",
-                    lat: 55.774,
-                    lng: 37.657,
-                    distance: 1.5
-                ),
-                Station(
-                    title: "Москва (Киевский вокзал)",
-                    code: "s9600216",
-                    stationType: "train_station",
-                    transportType: "train",
-                    lat: 55.742,
-                    lng: 37.565,
-                    distance: 2.3
-                ),
-                Station(
-                    title: "Москва (Ярославский вокзал)",
-                    code: "s9600214",
-                    stationType: "train_station",
-                    transportType: "train",
-                    lat: 55.776,
-                    lng: 37.658,
-                    distance: 1.8
-                )
-            ]
-        case "Санкт-Петербург":
-            return [
-                Station(
-                    title: "Санкт-Петербург (Московский вокзал)",
-                    code: "s9600366",
-                    stationType: "train_station",
-                    transportType: "train",
-                    lat: 59.929,
-                    lng: 30.363,
-                    distance: 0.3
-                ),
-                Station(
-                    title: "Санкт-Петербург (Ладожский вокзал)",
-                    code: "s9602498",
-                    stationType: "train_station",
-                    transportType: "train",
-                    lat: 59.932,
-                    lng: 30.440,
-                    distance: 1.1
-                ),
-                Station(
-                    title: "Санкт-Петербург (Финляндский вокзал)",
-                    code: "s9602499",
-                    stationType: "train_station",
-                    transportType: "train",
-                    lat: 59.956,
-                    lng: 30.356,
-                    distance: 0.8
-                )
-            ]
-        default:
-            return []
+        do {
+            return try await networkClient.getCarrierInfo(code: carrierCode)
+        } catch {
+            errorMessage = error.localizedDescription
+            throw error
         }
     }
     
-    private func getMockSegments() -> [Segment] {
-        return [
-            Segment(
-                from: Station(
-                    title: "Москва (Курский вокзал)",
-                    code: "s9600213",
-                    stationType: "train_station",
-                    transportType: "train",
-                    lat: 55.756,
-                    lng: 37.658,
-                    distance: nil
-                ),
-                to: Station(
-                    title: "Санкт-Петербург (Московский вокзал)",
-                    code: "s9600366",
-                    stationType: "train_station",
-                    transportType: "train",
-                    lat: 59.929,
-                    lng: 30.363,
-                    distance: nil
-                ),
-                departure: "2024-01-20T22:00:00",
-                arrival: "2024-01-21T06:30:00",
-                thread: Thread(
-                    uid: "12345",
-                    title: "Сапсан",
-                    number: "701",
-                    carrier: Carrier(
-                        code: 123,
-                        title: "РЖД",
-                        phone: "+7 800 775-00-00",
-                        email: "info@rzd.ru",
-                        url: "https://rzd.ru",
-                        address: "Москва",
-                        logo: nil
-                    ),
-                    transportType: "train"
-                ),
-                duration: 30600 // 8.5 часов
+    //MARK: - Статические данные(для теста)
+    
+    func getMockSegments(fromCode: String, toCode: String) -> [Segment] {
+        let carriers = [
+            Carrier(
+                code: 123,
+                title: "РЖД",
+                phone: "+7 800 775-00-00",
+                email: "info@rzd.ru",
+                url: "https://rzd.ru",
+                address: "Москва",
+                logo: nil
             ),
-            Segment(
-                from: Station(
-                    title: "Москва (Ленинградский вокзал)",
-                    code: "s9600215",
-                    stationType: "train_station",
-                    transportType: "train",
-                    lat: 55.776,
-                    lng: 37.655,
-                    distance: nil
-                ),
-                to: Station(
-                    title: "Санкт-Петербург (Ладожский вокзал)",
-                    code: "s9602498",
-                    stationType: "train_station",
-                    transportType: "train",
-                    lat: 59.932,
-                    lng: 30.440,
-                    distance: nil
-                ),
-                departure: "2024-01-20T23:30:00",
-                arrival: "2024-01-21T08:15:00",
-                thread: Thread(
-                    uid: "12346",
-                    title: "Ночной экспресс",
-                    number: "2",
-                    carrier: Carrier(
-                        code: 124,
-                        title: "ФПК",
-                        phone: "+7 800 775-00-00",
-                        email: "info@rzd.ru",
-                        url: "https://rzd.ru",
-                        address: "Москва",
-                        logo: nil
-                    ),
-                    transportType: "train"
-                ),
-                duration: 31500 // 8.75 часов
+            Carrier(
+                code: 124,
+                title: "ФПК",
+                phone: "+7 800 775-00-00",
+                email: "info@rzd.ru",
+                url: "https://rzd.ru",
+                address: "Москва",
+                logo: nil
+            ),
+            Carrier(
+                code: 125,
+                title: "Сапсан",
+                phone: "+7 800 775-00-00",
+                email: "info@rzd.ru",
+                url: "https://rzd.ru",
+                address: "Москва",
+                logo: nil
             )
         ]
+        
+        let times = [
+            ("22:00", "06:30", 30600),
+            ("23:30", "08:15", 31500),
+            ("07:45", "16:20", 30900),
+            ("15:20", "23:45", 30300)
+        ]
+        
+        var segments: [Segment] = []
+        
+        for (index, time) in times.enumerated() {
+            let carrier = carriers[index % carriers.count]
+            
+            // Создаем станции из кодов
+            let fromStation = Station(
+                title: getStationName(fromCode) ?? "Станция отправления",
+                code: fromCode,
+                stationType: "train_station",
+                transportType: "train",
+                lat: nil,
+                lng: nil,
+                distance: nil
+            )
+            
+            let toStation = Station(
+                title: getStationName(toCode) ?? "Станция назначения",
+                code: toCode,
+                stationType: "train_station",
+                transportType: "train",
+                lat: nil,
+                lng: nil,
+                distance: nil
+            )
+            
+            let segment = Segment(
+                from: fromStation,
+                to: toStation,
+                departure: "2024-01-20T\(time.0):00",
+                arrival: "2024-01-\(time.0 == "22:00" || time.0 == "23:30" ? "21" : "20")T\(time.1):00",
+                thread: Thread(
+                    uid: "mock_\(index)",
+                    title: carrier.title == "Сапсан" ? "Сапсан" : "Поезд №\(index + 700)",
+                    number: "\(700 + index)",
+                    carrier: carrier,
+                    transportType: "train"
+                ),
+                duration: time.2
+            )
+            
+            segments.append(segment)
+        }
+        
+        return segments
     }
     
-    private func getCurrentDate() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: Date())
+    // Поиск городов по названию (статические данные)
+        func searchCitiesStatic(_ query: String) async -> [Settlement] {
+            guard !query.isEmpty else { return [] }
+            
+            let matchingCities = CityCoordinates.cities.filter { city in
+                city.name.lowercased().contains(query.lowercased())
+            }
+            
+            return matchingCities.map { city in
+                Settlement(
+                    title: city.name,
+                    code: city.code,
+                    lat: city.lat,
+                    lng: city.lng
+                )
+            }
+        }
+        
+        // Получение станций для города (статические данные)
+        func getStationsForCityStatic(_ cityName: String) -> [Station] {
+            return CityCoordinates.getStations(for: cityName)
+        }
+        
+        // Получение кода станции по названию
+        func getStationCode(_ stationName: String) -> String? {
+            return CityCoordinates.getStationCode(for: stationName)
+        }
+        
+        
+        
+        private func getStationName(_ code: String) -> String? {
+            for city in CityCoordinates.cities {
+                if let station = city.stations.first(where: { $0.code == code }) {
+                    return station.title
+                }
+            }
+            return nil
+        }
     }
-}
