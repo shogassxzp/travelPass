@@ -13,6 +13,12 @@ class CityPickerViewModel: ObservableObject {
 
     private let stationService: StationService
 
+    // MARK: - Computed Properties
+
+    var cityNames: [String] {
+        cities.map { $0.title }
+    }
+
     // MARK: - Initializer
 
     init(stationService: StationService = DIContainer.shared.stationService) {
@@ -24,9 +30,7 @@ class CityPickerViewModel: ObservableObject {
 
     func searchCities() async {
         guard !searchText.isEmpty else {
-            await MainActor.run {
-                cities = []
-            }
+            await loadPopularCities()
             return
         }
         await MainActor.run {
@@ -34,12 +38,12 @@ class CityPickerViewModel: ObservableObject {
             errorMessage = nil
         }
         do {
-            let staticCities = await stationService.searchCitiesStatic(searchText)
+            let foundCities = await stationService.searchCitiesStatic(searchText)
 
             await MainActor.run {
-                self.cities = staticCities
+                self.cities = foundCities
 
-                if staticCities.isEmpty {
+                if foundCities.isEmpty {
                     self.errorMessage = "Город не найден"
                 }
             }
@@ -69,5 +73,9 @@ class CityPickerViewModel: ObservableObject {
             self.cities = popularCities
             isLoading = false
         }
+    }
+
+    func getCity(by name: String) -> Settlement? {
+        cities.first { $0.title == name }
     }
 }
