@@ -3,46 +3,74 @@ import Foundation
 
 @MainActor
 class StationPickerViewModel: ObservableObject {
+    // MARK: - Published Properties
+
     @Published var searchText = ""
     @Published var stations: [Station] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
-    
+
+    // MARK: - Properties
+
     private let stationService: StationService
-    let selectedCity: Settlement
-    
-    init(stationService: StationService, selectedCity: Settlement) {
-        self.stationService = stationService
+    let selectedCity: String
+
+    // MARK: - Computed Properties
+
+    var stationNames: [String] {
+        stations.map { $0.title }
+    }
+
+    // MARK: - Initializer
+
+    init(
+        selectedCity: String,
+        stationService: StationService = DIContainer.shared.stationService
+    ) {
         self.selectedCity = selectedCity
+        self.stationService = stationService
+        print("StationPickerViewModel created for city \(selectedCity)")
     }
-    
+
+    // MARK: - Public Methods
+
     func loadStations() async {
-        isLoading = true
-        errorMessage = nil
-        
-        await stationService.getStationsForCity(selectedCity)
-        
         await MainActor.run {
-            self.stations = stationService.searchResults
-            self.errorMessage = stationService.errorMessage
-            self.isLoading = stationService.isLoading
+            isLoading = false
+            errorMessage = nil
+        }
+        do {
+            let cityStations = stationService.getStationsForCityStatic(selectedCity)
+            
+            await MainActor.run {
+                self.stations = cityStations
+                
+                if cityStations.isEmpty {
+                    self.errorMessage = "Не найдено станций"
+                }
+            }
+            
+        } catch {
+            await MainActor.run {
+                self.errorMessage = "Ошибка загрузки"
+            }
+        }
+        await MainActor.run {
+            isLoading = false
         }
     }
     
-    func searchStations() async {
-        guard !searchText.isEmpty else {
-            await loadStations()
-            return
+    func filterStations() -> [Station] {
+        if searchText.isEmpty {
+            return stations
+        } else {
+            return stations.filter { station in
+                station.title.localizedCaseInsensitiveContains(searchText)
+            }
         }
-        
-        let filtered = stations.filter { station in
-            station.title.lowercased().contains(searchText.lowercased())
-        }
-        
-        stations = filtered
     }
-    
-    func selectStation(_ station: Station) -> String {
-        return "\(selectedCity.title) (\(station.title.replacingOccurrences(of: "\(selectedCity.title) ", with: "")))"
+
+    func getStation(by name: String) -> Station? {
+        stations.first {$0.title == name}
     }
 }
