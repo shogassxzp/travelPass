@@ -7,6 +7,7 @@ struct StationPickerScreen: View {
     let selectedCity: String
     @Binding var from: String
     @Binding var to: String
+    let onDismiss: () -> Void
 
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel: StationPickerViewModel
@@ -19,12 +20,14 @@ struct StationPickerScreen: View {
         selectedField: MainScreenViewModel.FieldType,
         selectedCity: String,
         from: Binding<String>,
-        to: Binding<String>
+        to: Binding<String>,
+        onDismiss: @escaping () -> Void
     ) {
         self.selectedField = selectedField
         self.selectedCity = selectedCity
         _from = from
         _to = to
+        self.onDismiss = onDismiss
 
         _viewModel = StateObject(
             wrappedValue: StationPickerViewModel(selectedCity: selectedCity)
@@ -63,7 +66,7 @@ struct StationPickerScreen: View {
     // MARK: - Private Methods
 
     private func selectStation(_ station: Station) {
-        let fullText = "\(selectedCity) \(station.title)"
+        let fullText = "\(selectedCity) (\(station.title))"
 
         switch selectedField {
         case .from:
@@ -72,6 +75,6 @@ struct StationPickerScreen: View {
             to = fullText
         }
 
-        dismiss()
+        onDismiss()
     }
 }
