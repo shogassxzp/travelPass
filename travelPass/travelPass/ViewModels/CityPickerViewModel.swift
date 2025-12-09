@@ -1,52 +1,73 @@
-import Foundation
 import Combine
 
 @MainActor
 class CityPickerViewModel: ObservableObject {
+    // MARK: - Published Properties
+
     @Published var searchText = ""
     @Published var cities: [Settlement] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
-    
+
+    // MARK: - Dependencies
+
     private let stationService: StationService
-    
-    init(stationService: StationService) {
+
+    // MARK: - Initializer
+
+    init(stationService: StationService = DIContainer.shared.stationService) {
         self.stationService = stationService
+        print("CityPickerViewModel created")
     }
-    
+
+    // MARK: - Public Methods
+
     func searchCities() async {
         guard !searchText.isEmpty else {
-            cities = []
+            await MainActor.run {
+                cities = []
+            }
             return
         }
-        
-        isLoading = true
-        errorMessage = nil
-        
-        do {
-            // Используем наш список координат для поиска городов
-            let matchingCities = CityCoordinates.cities.filter { city in
-                city.name.lowercased().contains(searchText.lowercased())
-            }
-            
-            cities = matchingCities.map { city in
-                Settlement(
-                    title: city.name,
-                    code: "",
-                    lat: city.lat,
-                    lng: city.lng
-                )
-            }
-            
-        } catch {
-            errorMessage = "Ошибка поиска: \(error.localizedDescription)"
-            cities = []
+        await MainActor.run {
+            isLoading = true
+            errorMessage = nil
         }
-        
-        isLoading = false
+        do {
+            let staticCities = await stationService.searchCitiesStatic(searchText)
+
+            await MainActor.run {
+                self.cities = staticCities
+
+                if staticCities.isEmpty {
+                    self.errorMessage = "Город не найден"
+                }
+            }
+        } catch {
+            await MainActor.run {
+                self.errorMessage = "Ошибка поиска"
+            }
+        }
+        await MainActor.run {
+            isLoading = false
+        }
     }
-    
-    func selectCity(_ city: Settlement) {
-        // Город выбран, дальше будет переход к станциям
+
+    func loadPopularCities() async {
+        await MainActor.run {
+            isLoading = true
+        }
+        let popularCities = CityCoordinates.cities.map { city in
+            Settlement(
+                title: city.name,
+                code: city.code,
+                lat: city.lat,
+                lng: city.lng
+            )
+        }
+        await MainActor.run {
+            self.cities = popularCities
+            isLoading = false
+        }
     }
 }
