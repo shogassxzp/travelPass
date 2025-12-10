@@ -1,5 +1,3 @@
-import Foundation
-
 struct Station: Codable, Identifiable, Hashable, Sendable {
     let title: String
     let code: String
@@ -10,6 +8,17 @@ struct Station: Codable, Identifiable, Hashable, Sendable {
     let distance: Double?
     
     var id: String { code }
+    
+    var isRailwayStation: Bool {
+        let type = stationType?.lowercased() ?? ""
+        let titleLower = title.lowercased()
+        
+        return type.contains("train") ||
+               type.contains("railway") ||
+               titleLower.contains("вокзал") &&
+               !titleLower.contains("автовокзал") &&
+               !titleLower.contains("автостанция")
+    }
     
     enum CodingKeys: String, CodingKey {
         case title, code

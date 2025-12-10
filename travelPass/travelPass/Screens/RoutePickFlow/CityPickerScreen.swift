@@ -64,7 +64,7 @@ struct CityPickerScreen: View {
                 await viewModel.searchCities()
             }
             .task {
-                await viewModel.loadPopularCities()
+                await viewModel.loadCities()
             }
         }
     }

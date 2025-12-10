@@ -9,11 +9,11 @@ struct NearestCityResponse: Codable, Sendable {
     let lat: Double
     let lng: Double
     let type: String
-    
+
     enum CodingKeys: String, CodingKey {
-        case distance, code , title
+        case distance, code, title
         case popularTitle = "popular_title"
         case shortTitle = "short_title"
-        case lat, lng, type 
+        case lat, lng, type
     }
 }

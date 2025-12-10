@@ -25,7 +25,7 @@ enum APIError: Error, Sendable {
 
 actor NetworkClient {
     private let apiKey: String
-    private let baseURL = "https://api.rasp.yandex.net.ru/v3.0"
+    private let baseURL = "https://api.rasp.yandex-net.ru/v3.0"
     private let decoder: JSONDecoder
     private let session: URLSession
 
@@ -40,7 +40,6 @@ actor NetworkClient {
         session = URLSession(configuration: configuration)
     }
 
-    // 1. Поиск ближайшего города по координатам
     func getNearestCity(lat: Double, lng: Double, distance: Int = 50) async throws -> NearestCityResponse {
         try await makeRequest(
             endpoint: "/nearest_settlement/",
@@ -54,7 +53,6 @@ actor NetworkClient {
         )
     }
 
-    // 2. Поиск станций вокруг города (в радиусе N км)
     func getNearestStations(lat: Double, lng: Double, distance: Int = 20) async throws -> [Station] {
         let response: StationsResponse = try await makeRequest(
             endpoint: "/nearest_stations/",
@@ -69,7 +67,6 @@ actor NetworkClient {
         return response.stations ?? []
     }
 
-    // 3. Поиск рейсов между станциями
     func searchSegments(from: String, to: String, date: String? = nil) async throws -> [Segment] {
         var queryItems: [String: String] = [
             "from": from,
@@ -90,7 +87,6 @@ actor NetworkClient {
         return response.segments ?? []
     }
 
-    // 4. Информация о перевозчике
     func getCarrierInfo(code: String) async throws -> Carrier? {
         let response: CarrierResponse = try await makeRequest(
             endpoint: "/carrier/",
@@ -103,7 +99,6 @@ actor NetworkClient {
         return response.carriers?.first
     }
 
-    // 5. Общий метод для запросов
     private func makeRequest<T: Decodable>(
         endpoint: String,
         queryItems: [String: String]

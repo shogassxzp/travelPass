@@ -1,5 +1,5 @@
-import Foundation
 import Combine
+import Foundation
 
 @MainActor
 class StationService: ObservableObject {
@@ -7,24 +7,27 @@ class StationService: ObservableObject {
     @Published var errorMessage: String?
     @Published var searchResults: [Station] = []
     @Published var searchSegments: [Segment] = []
-    
+
+    private var stationsCache: [String: String] = [:]
+    private var cityCoordinatesCache: [String: (lat: Double, lng: Double)] = [:]
     private let networkClient: NetworkClient
-    
+    private let cityService: CityService
+
     init(apiKey: String) {
-        self.networkClient = NetworkClient(apiKey: apiKey)
+        networkClient = NetworkClient(apiKey: apiKey)
+        cityService = CityService(networkClient: networkClient)
     }
-    
-    //MARK: - Методы API
-    
+
+    // MARK: - Методы API
+
     func searchSegments(from: String, to: String, date: Date? = nil) async throws -> [Segment] {
         isLoading = true
         errorMessage = nil
-        
+
         do {
-            
             let fromCode = parseStationCode(from)
             let toCode = parseStationCode(to)
-            
+
             let dateString: String?
             if let date = date {
                 let formatter = DateFormatter()
@@ -37,30 +40,142 @@ class StationService: ObservableObject {
                 from: fromCode,
                 to: toCode,
                 date: dateString
-                )
+            )
+
+            let trainSegments = segments.filter { segment in
+                segment.thread.transportType.lowercased() == "train"
+            }
+
             isLoading = false
+
+            if trainSegments.isEmpty {
+                throw APIError.noData
+            }
+
             return segments
+
         } catch {
             isLoading = false
             errorMessage = error.localizedDescription
             throw error
         }
     }
-    
-    private func parseStationCode(_ text: String) -> String {
-           // Пока просто возвращаем дефолтные значения
-           // Позже реализуем полноценный парсинг
-           if text.contains("Москва") {
-               return "s9600213"  // Москва Курский вокзал
-           } else if text.contains("Санкт-Петербург") {
-               return "s9600366"  // СПб Московский вокзал
-           } else if text.contains("Казань") {
-               return "s9604000"  // Казань
-           } else {
-               return "s9600213"  // Дефолт
-           }
-       }
-    
+
+    func getStationsForCity(_ cityName: String) async throws -> [Station] {
+        print("🔍 Получение станций для города: \(cityName)")
+
+        let (lat, lng) = try await getCityCoordinates(cityName)
+
+        let stations = try await networkClient.getNearestStations(
+            lat: lat,
+            lng: lng,
+            distance: 10
+        )
+
+        let trainStations = stations.filter { station in
+
+            let isTrain = station.transportType?.lowercased() == "train"
+
+            let stationType = station.stationType?.lowercased()
+            let isRailwayStation = stationType == "train_station" ||
+                stationType == "railway_station" ||
+                stationType == "station" ||
+                (station.title.lowercased().contains("вокзал"))
+
+            let isBus = stationType == "bus_station" ||
+                stationType == "bus_stop" ||
+                station.title.lowercased().contains("автовокзал") ||
+                station.title.lowercased().contains("автостанция")
+
+            let isMetro = stationType == "metro_station" ||
+                station.title.lowercased().contains("метро")
+
+            return (isTrain || isRailwayStation) && !isBus && !isMetro
+        }
+
+        for station in trainStations {
+            stationsCache[station.code] = station.title
+        }
+
+        print("✅ Найдено Ж/Д станций для \(cityName): \(trainStations.count)")
+
+        return trainStations
+    }
+
+    private func getCityCoordinates(_ cityName: String) async throws -> (lat: Double, lng: Double) {
+        if let coordinates = cityCoordinatesCache[cityName] {
+            print("📍 Координаты города \(cityName) из кэша")
+            return coordinates
+        }
+
+        // Если нет в кэше, получаем через API
+        print("📍 Запрашиваем координаты города \(cityName) через API")
+
+        // Координаты крупных городов для запроса
+        let knownCityCoordinates: [String: (lat: Double, lng: Double)] = [
+            "Москва": (55.7558, 37.6173),
+            "Санкт-Петербург": (59.9343, 30.3351),
+            "Казань": (55.7961, 49.1064),
+            "Екатеринбург": (56.8389, 60.6057),
+            "Нижний Новгород": (56.3269, 44.0065),
+            "Новосибирск": (55.0084, 82.9357),
+            "Самара": (53.1959, 50.1002),
+            "Омск": (54.9893, 73.3682),
+            "Челябинск": (55.1644, 61.4368),
+            "Ростов-на-Дону": (47.2357, 39.7015),
+        ]
+
+        guard let coordinates = knownCityCoordinates[cityName] else {
+            throw APIError.noData
+        }
+
+        cityCoordinatesCache[cityName] = coordinates
+
+        return coordinates
+    }
+
+    func parseStationCode(_ text: String) -> String {
+        print("🔍 Парсинг кода станции из: '\(text)'")
+        print("📊 Размер кэша станций: \(stationsCache.count)")
+
+        if text.contains("(") && text.contains(")") {
+            let components = text.split(separator: "(")
+            if components.count >= 2 {
+                let stationName = String(components[1])
+                    .replacingOccurrences(of: ")", with: "")
+                    .trimmingCharacters(in: .whitespaces)
+
+                print("🔍 Ищем станцию по имени: '\(stationName)'")
+
+                // Ищем в кэше
+                for (code, name) in stationsCache {
+                    if name == stationName {
+                        print("✅ Найдена точная станция: \(code) - \(name)")
+                        return code
+                    }
+                }
+
+                for (code, name) in stationsCache {
+                    if name.contains(stationName) || stationName.contains(name) {
+                        print("✅ Найдена частичная станция: \(code) - \(name)")
+                        return code
+                    }
+                }
+            }
+        }
+
+        for (code, name) in stationsCache {
+            if text.contains(name) || name.contains(text) {
+                print("✅ Найдена станция по тексту: \(code) - \(name)")
+                return code
+            }
+        }
+
+        print("❌ Станция не найдена в кэше, дефолт: s9600213")
+        print("📋 Содержимое кэша: \(stationsCache)")
+        return "s9600213"
+    }
+
     func getCarrierInfo(carrierCode: String) async throws -> Carrier? {
         do {
             return try await networkClient.getCarrierInfo(code: carrierCode)
@@ -69,130 +184,4 @@ class StationService: ObservableObject {
             throw error
         }
     }
-    
-    //MARK: - Статические данные(для теста)
-    
-    func getMockSegments(fromCode: String, toCode: String) -> [Segment] {
-        let carriers = [
-            Carrier(
-                code: 123,
-                title: "РЖД",
-                phone: "+7 800 775-00-00",
-                email: "info@rzd.ru",
-                url: "https://rzd.ru",
-                address: "Москва",
-                logo: nil
-            ),
-            Carrier(
-                code: 124,
-                title: "ФПК",
-                phone: "+7 800 775-00-00",
-                email: "info@rzd.ru",
-                url: "https://rzd.ru",
-                address: "Москва",
-                logo: nil
-            ),
-            Carrier(
-                code: 125,
-                title: "Сапсан",
-                phone: "+7 800 775-00-00",
-                email: "info@rzd.ru",
-                url: "https://rzd.ru",
-                address: "Москва",
-                logo: nil
-            )
-        ]
-        
-        let times = [
-            ("22:00", "06:30", 30600),
-            ("23:30", "08:15", 31500),
-            ("07:45", "16:20", 30900),
-            ("15:20", "23:45", 30300)
-        ]
-        
-        var segments: [Segment] = []
-        
-        for (index, time) in times.enumerated() {
-            let carrier = carriers[index % carriers.count]
-            
-            // Создаем станции из кодов
-            let fromStation = Station(
-                title: getStationName(fromCode) ?? "Станция отправления",
-                code: fromCode,
-                stationType: "train_station",
-                transportType: "train",
-                lat: nil,
-                lng: nil,
-                distance: nil
-            )
-            
-            let toStation = Station(
-                title: getStationName(toCode) ?? "Станция назначения",
-                code: toCode,
-                stationType: "train_station",
-                transportType: "train",
-                lat: nil,
-                lng: nil,
-                distance: nil
-            )
-            
-            let segment = Segment(
-                from: fromStation,
-                to: toStation,
-                departure: "2024-01-20T\(time.0):00",
-                arrival: "2024-01-\(time.0 == "22:00" || time.0 == "23:30" ? "21" : "20")T\(time.1):00",
-                thread: Thread(
-                    uid: "mock_\(index)",
-                    title: carrier.title == "Сапсан" ? "Сапсан" : "Поезд №\(index + 700)",
-                    number: "\(700 + index)",
-                    carrier: carrier,
-                    transportType: "train"
-                ),
-                duration: time.2
-            )
-            
-            segments.append(segment)
-        }
-        
-        return segments
-    }
-    
-    // Поиск городов по названию (статические данные)
-        func searchCitiesStatic(_ query: String) async -> [Settlement] {
-            guard !query.isEmpty else { return [] }
-            
-            let matchingCities = CityCoordinates.cities.filter { city in
-                city.name.lowercased().contains(query.lowercased())
-            }
-            
-            return matchingCities.map { city in
-                Settlement(
-                    title: city.name,
-                    code: city.code,
-                    lat: city.lat,
-                    lng: city.lng
-                )
-            }
-        }
-        
-        // Получение станций для города (статические данные)
-        func getStationsForCityStatic(_ cityName: String) -> [Station] {
-            return CityCoordinates.getStations(for: cityName)
-        }
-        
-        // Получение кода станции по названию
-        func getStationCode(_ stationName: String) -> String? {
-            return CityCoordinates.getStationCode(for: stationName)
-        }
-        
-        
-        
-        private func getStationName(_ code: String) -> String? {
-            for city in CityCoordinates.cities {
-                if let station = city.stations.first(where: { $0.code == code }) {
-                    return station.title
-                }
-            }
-            return nil
-        }
-    }
+}

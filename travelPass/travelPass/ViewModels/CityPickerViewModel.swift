@@ -1,4 +1,5 @@
 import Combine
+import Foundation
 
 @MainActor
 class CityPickerViewModel: ObservableObject {
@@ -11,7 +12,7 @@ class CityPickerViewModel: ObservableObject {
 
     // MARK: - Dependencies
 
-    private let stationService: StationService
+    private let cityService: CityService
 
     // MARK: - Computed Properties
 
@@ -21,8 +22,8 @@ class CityPickerViewModel: ObservableObject {
 
     // MARK: - Initializer
 
-    init(stationService: StationService = DIContainer.shared.stationService) {
-        self.stationService = stationService
+    init(cityService: CityService = DIContainer.shared.cityService) {
+        self.cityService = cityService
         print("CityPickerViewModel created")
     }
 
@@ -30,47 +31,38 @@ class CityPickerViewModel: ObservableObject {
 
     func searchCities() async {
         guard !searchText.isEmpty else {
-            await loadPopularCities()
+            await loadCities()
             return
         }
+
         await MainActor.run {
             isLoading = true
             errorMessage = nil
         }
-        do {
-            let foundCities = await stationService.searchCitiesStatic(searchText)
 
-            await MainActor.run {
-                self.cities = foundCities
+        let foundCities = await cityService.searchCities(by: searchText)
 
-                if foundCities.isEmpty {
-                    self.errorMessage = "Город не найден"
-                }
-            }
-        } catch {
-            await MainActor.run {
-                self.errorMessage = "Ошибка поиска"
-            }
-        }
         await MainActor.run {
+            self.cities = foundCities
+
+            if foundCities.isEmpty {
+                self.errorMessage = "Город не найден"
+            }
+
             isLoading = false
         }
     }
 
-    func loadPopularCities() async {
+    func loadCities() async {
         await MainActor.run {
             isLoading = true
+            errorMessage = nil
         }
-        let popularCities = CityCoordinates.cities.map { city in
-            Settlement(
-                title: city.name,
-                code: city.code,
-                lat: city.lat,
-                lng: city.lng
-            )
-        }
+
+        let allCities = await cityService.getCities()
+
         await MainActor.run {
-            self.cities = popularCities
+            self.cities = allCities
             isLoading = false
         }
     }

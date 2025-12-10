@@ -1,20 +1,11 @@
 import SwiftUI
 
 struct CarriersListScreen: View {
-    // MARK: - Environment Properties
-
     @Environment(\.dismiss) private var dismiss
-
-    // MARK: - ViewModel
-
     @StateObject private var viewModel: CarriersListViewModel
-
-    // MARK: - Route
 
     let from: String
     let to: String
-
-    // MARK: - Initalizer
 
     init(from: String, to: String) {
         self.from = from
@@ -24,14 +15,12 @@ struct CarriersListScreen: View {
         )
     }
 
-    // MARK: - Body
-
     var body: some View {
         NavigationStack(path: $viewModel.navigationPath) {
             VStack(spacing: 0) {
                 headerView
 
-                if viewModel.segments.isEmpty {
+                if viewModel.filteredSegments.isEmpty && !viewModel.isLoading {
                     emptyStateView
                 } else {
                     carriersListView
@@ -49,7 +38,12 @@ struct CarriersListScreen: View {
                 }
             }
             .task {
+                print("CarriersListScreen: task запущен")
                 await viewModel.loadSegments()
+            }
+            .onAppear {
+                print("CarriersListScreen появился")
+                print("filteredSegments count: \(viewModel.filteredSegments.count)")
             }
         }
     }
@@ -63,6 +57,7 @@ struct CarriersListScreen: View {
             .frame(maxWidth: .infinity, alignment: .leading)
     }
 
+
     private var emptyStateView: some View {
         VStack {
             Spacer()
@@ -75,7 +70,7 @@ struct CarriersListScreen: View {
     private var carriersListView: some View {
         ScrollView {
             LazyVStack(spacing: 16) {
-                ForEach(viewModel.segments) { segment in
+                ForEach(viewModel.filteredSegments) { segment in
                     CarrierCell(segment: segment)
                         .onTapGesture {
                             if let carrier = segment.thread.carrier {
@@ -118,9 +113,17 @@ struct CarriersListScreen: View {
     private func routeDestination(for route: CarriersListViewModel.CarrierRoute) -> some View {
         switch route {
         case .filters:
-            FiltersScreen()
+            FiltersScreen(
+                filtersViewModel: viewModel.filtersViewModel,
+                onApply: {
+                    viewModel.applyFilters()
+                }
+            )
         case let .carrierDetails(carrier):
-            CarrierDetailsScreen(carrier: carrier)
+            CarrierDetails(
+                carrierRoute: $viewModel.navigationPath,
+                carrier: carrier
+            )
         }
     }
 }

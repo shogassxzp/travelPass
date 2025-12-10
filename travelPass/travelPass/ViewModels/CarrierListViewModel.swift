@@ -6,19 +6,19 @@ class CarriersListViewModel: ObservableObject {
     // MARK: - Published Properties
 
     @Published var segments: [Segment] = []
+    @Published var filteredSegments: [Segment] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
-    @Published var showingFilters = false
     @Published var navigationPath = [CarrierRoute]()
 
-    // MARK: - Dependencies
+    // MARK: - Properties
 
     private let stationService: StationService
-
-    // MARK: - Route Data
-
     let fromText: String
     let toText: String
+
+    // Фильтры
+    @Published var filtersViewModel = FiltersViewModel()
 
     // MARK: - Types
 
@@ -37,7 +37,7 @@ class CarriersListViewModel: ObservableObject {
         self.stationService = stationService
         self.fromText = fromText
         self.toText = toText
-        print("CarrierListViewModel crated for route \(fromText) -> \(toText)")
+        print("CarriersListViewModel создан для: \(fromText) → \(toText)")
     }
 
     // MARK: - Public Methods
@@ -47,21 +47,31 @@ class CarriersListViewModel: ObservableObject {
         errorMessage = nil
 
         do {
-            segments = try await stationService.searchSegments(
+            let segments = try await stationService.searchSegments(
                 from: fromText,
                 to: toText
             )
 
-            if segments.isEmpty {
-                print("Реальных данных нет, используем моки")
-                segments = getMockSegments()
+            await MainActor.run {
+                self.segments = segments
+                self.filteredSegments = segments
+
+                if segments.isEmpty {
+                    self.errorMessage = "Рейсы не найдены"
+                }
             }
         } catch {
-            errorMessage = error.localizedDescription
-            print("error \(error)")
-            segments = getMockSegments()
+            await MainActor.run {
+                self.errorMessage = "Ошибка загрузки: \(error.localizedDescription)"
+                self.segments = []
+                self.filteredSegments = []
+            }
         }
         isLoading = false
+    }
+
+    func applyFilters() {
+        filteredSegments = filtersViewModel.filterSegmentsByTime(segments)
     }
 
     func showCarrierDetails(_ carrier: Carrier) {
@@ -70,27 +80,5 @@ class CarriersListViewModel: ObservableObject {
 
     func showFilters() {
         navigationPath.append(.filters)
-    }
-
-    // MARK: - Mock Data
-
-    private func getMockSegments() -> [Segment] {
-        // Используем существующий метод из StationService
-        let fromCode = parseStationCode(fromText)
-        let toCode = parseStationCode(toText)
-        return stationService.getMockSegments(fromCode: fromCode, toCode: toCode)
-    }
-
-    private func parseStationCode(_ text: String) -> String {
-        // Простой парсинг для тестов
-        if text.contains("Москва") {
-            return "s9600213"
-        } else if text.contains("Санкт-Петербург") {
-            return "s9600366"
-        } else if text.contains("Казань") {
-            return "s9604000"
-        } else {
-            return "s9600213"
-        }
     }
 }

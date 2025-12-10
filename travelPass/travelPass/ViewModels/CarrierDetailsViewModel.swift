@@ -1,18 +1,36 @@
-//
-//  CarrierDetailsViewModel.swift
-//  travelPass
-//
-//  Created by Игнат Рогачевич on 9.12.25.
-//
+import Combine
+import Foundation
 
-import SwiftUI
+@MainActor
+class CarrierDetailsViewModel: ObservableObject {
+    let carrier: Carrier
+    @Published var isLoading = false
+    @Published var errorMessage: String?
+    @Published var carrierDetails: Carrier?
 
-struct CarrierDetailsViewModel: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+    private let stationService: StationService
+
+    init(carrier: Carrier, stationService: StationService) {
+        self.carrier = carrier
+        self.stationService = stationService
     }
-}
 
-#Preview {
-    CarrierDetailsViewModel()
+    func loadCarrierDetails() async {
+        isLoading = true
+        errorMessage = nil
+
+        do {
+            if let details = try await stationService.getCarrierInfo(carrierCode: "\(carrier.code)") {
+                await MainActor.run {
+                    self.carrierDetails = details
+                }
+            }
+        } catch {
+            await MainActor.run {
+                self.errorMessage = error.localizedDescription
+            }
+        }
+
+        isLoading = false
+    }
 }

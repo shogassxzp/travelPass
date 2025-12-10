@@ -92,8 +92,12 @@ struct MainScreen: View {
             if viewModel.isFindButtonEnabled {
                 Button(action: {
                     Task {
-                        if await viewModel.validateRoute() {
+                        let isValid = await viewModel.validateRoute()
+                        
+                        if isValid {
                             viewModel.showingCarrierList = true
+                        } else {
+                            print("Маршрут невалиден")
                         }
                     }
                 }) {

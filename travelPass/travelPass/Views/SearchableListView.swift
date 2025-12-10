@@ -75,7 +75,7 @@ struct SearchableListView: View {
 
                                 Image(systemName: Chevron.right)
                                     .foregroundStyle(.yBlack)
-                                    .font(.system(size: 14,weight: .semibold))
+                                    .font(.system(size: 14, weight: .semibold))
                                     .padding(.trailing, 24)
                             }
                             .padding(.vertical, 12)
@@ -90,4 +90,3 @@ struct SearchableListView: View {
         searchString = ""
     }
 }
-

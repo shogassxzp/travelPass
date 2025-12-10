@@ -5,12 +5,11 @@ struct Thread: Codable, Identifiable, Sendable {
     let title: String
     let number: String?
     let carrier: Carrier?
-    let transportType: String
+    let transportType = "train"
 
     var id: String { uid }
 
     enum CodingKeys: String, CodingKey {
         case uid, title, number, carrier
-        case transportType = "transport_type"
     }
 }

@@ -29,7 +29,6 @@ class StationPickerViewModel: ObservableObject {
     ) {
         self.selectedCity = selectedCity
         self.stationService = stationService
-        print("StationPickerViewModel created for city \(selectedCity)")
     }
 
     // MARK: - Public Methods
@@ -40,16 +39,16 @@ class StationPickerViewModel: ObservableObject {
             errorMessage = nil
         }
         do {
-            let cityStations = stationService.getStationsForCityStatic(selectedCity)
-            
+            let stations = try await stationService.getStationsForCity(selectedCity)
+
             await MainActor.run {
-                self.stations = cityStations
-                
-                if cityStations.isEmpty {
+                self.stations = stations
+
+                if stations.isEmpty {
                     self.errorMessage = "Не найдено станций"
                 }
             }
-            
+
         } catch {
             await MainActor.run {
                 self.errorMessage = "Ошибка загрузки"
@@ -59,7 +58,7 @@ class StationPickerViewModel: ObservableObject {
             isLoading = false
         }
     }
-    
+
     func filterStations() -> [Station] {
         if searchText.isEmpty {
             return stations
@@ -71,6 +70,6 @@ class StationPickerViewModel: ObservableObject {
     }
 
     func getStation(by name: String) -> Station? {
-        stations.first {$0.title == name}
+        stations.first { $0.title == name }
     }
 }

@@ -66,7 +66,7 @@ struct StationPickerScreen: View {
     // MARK: - Private Methods
 
     private func selectStation(_ station: Station) {
-        let fullText = "\(selectedCity) (\(station.title))"
+        let fullText = "\(station.title)"
 
         switch selectedField {
         case .from:

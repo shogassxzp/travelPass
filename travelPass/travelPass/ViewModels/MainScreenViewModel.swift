@@ -27,7 +27,6 @@ class MainScreenViewModel: ObservableObject {
 
     init(stationService: StationService = DIContainer.shared.stationService) {
         self.stationService = stationService
-        print("MainScreenViewModel created with stationService")
     }
 
     // MARK: - Computed Properties
@@ -57,7 +56,7 @@ class MainScreenViewModel: ObservableObject {
         errorMessage = nil
 
         do {
-            // Пробуем найти сегменты (пока с мок-данными)
+
             let _ = try await stationService.searchSegments(from: from, to: to)
             isLoading = false
             return true
