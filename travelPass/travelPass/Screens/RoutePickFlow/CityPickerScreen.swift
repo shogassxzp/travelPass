@@ -1,50 +1,71 @@
 import SwiftUI
 
 struct CityPickerScreen: View {
-    let selectedField: MainScreen.FieldType
+    // MARK: - Properties
+
+    let selectedField: MainScreenViewModel.FieldType
     @Binding var from: String
     @Binding var to: String
-    @Environment(\.dismiss) private var dismiss
 
-    @State private var searchText = ""
-    @State private var cities = ["Москва", "Санкт-Петербург", "Сочи", "Краснодар"]
-    @State private var navigationPath = [String]()
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var viewModel = CityPickerViewModel()
+    @State private var navigationPath = NavigationPath()
+
+    // MARK: - Initializer
+
+    init(
+        selectedField: MainScreenViewModel.FieldType,
+        from: Binding<String>,
+        to: Binding<String>,
+    ) {
+        self.selectedField = selectedField
+        _from = from
+        _to = to
+    }
+
+    // MARK: - Body
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
-            SearchableListView(
-                title: "Выбор города",
-                placeholder: "Введите запрос",
-                emptyMessage: "Город не найден",
-                searchString: $searchText,
-                items: cities
-            ) { city in
-
-                navigationPath.append(city)
-            }
-            .navigationDestination(for: String.self) { city in
-
-                StationPickerScreen(
-                    selectedField: selectedField,
-                    selectedCity: city,
-                    from: $from,
-                    to: $to,
-                    onDismiss: { dismiss() }
-                )
+            VStack {
+                SearchableListView(
+                    title: "Выбор города",
+                    placeholder: "Введите запрос",
+                    emptyMessage: "Город не найден",
+                    searchString: $viewModel.searchText,
+                    items: viewModel.cities.map { $0.title }
+                ) { cityName in
+                    if let city = viewModel.getCity(by: cityName) {
+                        navigationPath.append(city)
+                    }
+                }
             }
             .navigationTitle("Выбор города")
             .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(for: Settlement.self) { city in
+                StationPickerScreen(
+                    selectedField: selectedField,
+                    selectedCity: city.title,
+                    from: $from,
+                    to: $to,
+                    onDismiss: {
+                        dismiss()
+                    }
+                )
+            }
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: { dismiss() }) {
-                        Image(systemName: Chevron.left)
-                            .foregroundStyle(.yBlack)
-                            .font(.system(size:17, weight: .semibold))
+                        Image(systemName: "chevron.left")
                     }
                 }
+            }
+            .task(id: viewModel.searchText) {
+                await viewModel.searchCities()
+            }
+            .task {
+                await viewModel.loadCities()
             }
         }
     }
 }
-
-

@@ -18,7 +18,3 @@ struct ErrorView: View {
             .font(.system(size: 24, weight: .bold))
     }
 }
-
-#Preview {
-    ErrorView(type: .server)
-}

@@ -1,4 +1,3 @@
-// ProgressBar.swift
 import SwiftUI
 
 extension CGFloat {

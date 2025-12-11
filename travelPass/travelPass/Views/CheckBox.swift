@@ -25,7 +25,3 @@ struct RadioButton: View {
         }
     }
 }
-
-#Preview {
-    RadioButton(isSelected: true, action: {})
-}

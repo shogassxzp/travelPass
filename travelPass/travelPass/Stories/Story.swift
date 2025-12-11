@@ -1,6 +1,5 @@
 import SwiftUI
 
-
 enum StoryConstants {
     static let title = "Text Text Text Text Text Text Text Text Text Text"
     static let description =
@@ -14,11 +13,11 @@ struct Story: Identifiable {
     let description: String
     var isViewed: Bool = false
 
-    static let stories: [Story] = (1...8).map { index in
-    Story(
-        backgroundImage:"Story\(index)",
-        title: StoryConstants.title,
-        description: StoryConstants.description
-    )
+    static let stories: [Story] = (1 ... 8).map { index in
+        Story(
+            backgroundImage: "Story\(index)",
+            title: StoryConstants.title,
+            description: StoryConstants.description
+        )
     }
 }
